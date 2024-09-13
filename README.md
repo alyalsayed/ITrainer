@@ -1,2 +1,2 @@
-# GymFit
-DEPI Final project : Gym Management System Built With Laravel and MySql Database
+# Itrainer
+DEPI Final project : Training Management System Built With Laravel and MySql Database
