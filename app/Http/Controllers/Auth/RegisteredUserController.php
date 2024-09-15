@@ -45,6 +45,17 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
-    }
+        // Role-based redirection after registration
+        if ($user->userType === 'admin') {
+            return redirect()->intended(route('admin.dashboard'));
+        } elseif ($user->userType === 'hr') {
+            return redirect()->intended(route('hr.dashboard'));
+        } elseif ($user->userType === 'instructor') {
+            return redirect()->intended(route('instructor.dashboard'));
+        } elseif ($user->userType === 'student') {
+            return redirect()->intended(route('student.dashboard'));
+        }
+
+        // Default redirection if no specific role is matched
+        return redirect()->intended(route('dashboard'));    }
 }
