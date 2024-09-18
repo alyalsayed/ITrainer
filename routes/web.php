@@ -6,7 +6,7 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Hr\DashboardController as HrDashboardController;
 use App\Http\Controllers\Instructor\DashboardController as InstructorDashboardController;
 use App\Http\Controllers\Student\DashboardController as StudentDashboardController;
-
+use App\Http\Controllers\Instructor\SessionController;
 Route::get('/', function () {
     return view('welcome');
 });
@@ -34,6 +34,7 @@ Route::middleware(['auth', 'role:hr'])->group(function () {
 // Instructor routes
 Route::middleware(['auth', 'role:instructor'])->group(function () {
     Route::get('/instructor/dashboard', [InstructorDashboardController::class, 'index'])->name('instructor.dashboard');
+    Route::resource('sessions', SessionController::class);
 });
 
 // Student routes

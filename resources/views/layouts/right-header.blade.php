@@ -63,10 +63,16 @@
             </a>
 
             <div class="user-menu dropdown-menu">
-                <a class="nav-link" href="#"><i class="fa fa-user"></i>My Profile</a>
+                <a class="nav-link" href={{ route('profile.edit') }}><i class="fa fa-user"></i>My Profile</a>
 
-                <a class="nav-link" href="#"><i class="fa fa-power-off"></i>Logout</a>
-            </div>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    @csrf
+                </form>
+                
+                <a class="nav-link" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    <i class="fa fa-power-off"></i> Logout
+                </a>
+                            </div>
         </div>
     </div>
 </div>

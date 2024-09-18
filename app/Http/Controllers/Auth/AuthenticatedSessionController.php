@@ -45,7 +45,9 @@ class AuthenticatedSessionController extends Controller
         }
 
         // Default redirection if role doesn't match
-        return redirect()->intended(route('dashboard'));
+        // return redirect()->intended(route('dashboard'));
+
+        return redirect()->intended('/');
     }
 
 
