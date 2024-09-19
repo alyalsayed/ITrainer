@@ -46,8 +46,13 @@ class User extends Authenticatable
             'userType' => 'string',
         ];
     }
-    public function hasRole(string $role): bool
+    public function tracks()
     {
-        return $this->userType === $role;
+        return $this->belongsToMany(Track::class, 'track_user', 'user_id', 'track_id');
+    }
+
+    public function sessions()
+    {
+        return $this->hasManyThrough(TrackSession::class, Track::class, 'user_id', 'track_id', 'id', 'id');
     }
 }

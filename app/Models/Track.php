@@ -11,4 +11,13 @@ class Track extends Model
 
     protected $fillable = ['name', 'description','start_date', 'end_date'];
 
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'track_user', 'track_id', 'user_id')->withTimestamps();
+    }
+
+    public function sessions()
+    {
+        return $this->hasMany(TrackSession::class, 'track_id', 'id');
+    }
 }

@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Session extends Model
+class TrackSession extends Model
 {
     use HasFactory;
     protected $table = 'track_sessions';
@@ -17,6 +17,6 @@ class Session extends Model
     ];
     public function track()
     {
-        return $this->belongsTo(Track::class, 'track_id');
+        return $this->belongsTo(Track::class, 'track_id', 'id');
     }
 }

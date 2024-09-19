@@ -6,7 +6,8 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Hr\DashboardController as HrDashboardController;
 use App\Http\Controllers\Instructor\DashboardController as InstructorDashboardController;
 use App\Http\Controllers\Student\DashboardController as StudentDashboardController;
-use App\Http\Controllers\Instructor\SessionController;
+use App\Http\Controllers\SessionController;
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -26,19 +27,25 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 });
 
+// Instructor routes (CRUD operations)
+Route::middleware(['auth', 'role:instructor'])->group(function () {
+    Route::get('/instructor/dashboard', [InstructorDashboardController::class, 'index'])->name('instructor.dashboard');
+    Route::resource('sessions', SessionController::class); // Includes all CRUD operations
+});
+
+// Shared routes for both students and instructors
+Route::middleware(['auth', 'role:student,instructor'])->group(function () {
+    Route::get('sessions', [SessionController::class, 'index'])->name('sessions.index'); // View all sessions
+    Route::get('sessions/{session}', [SessionController::class, 'show'])->name('sessions.show'); // View a single session
+});
+// Student routes
+Route::middleware(['auth', 'role:student'])->group(function () {
+    Route::get('/student/dashboard', [StudentDashboardController::class, 'index'])->name('student.dashboard');
+});
 // HR routes
 Route::middleware(['auth', 'role:hr'])->group(function () {
     Route::get('/hr/dashboard', [HrDashboardController::class, 'index'])->name('hr.dashboard');
 });
 
-// Instructor routes
-Route::middleware(['auth', 'role:instructor'])->group(function () {
-    Route::get('/instructor/dashboard', [InstructorDashboardController::class, 'index'])->name('instructor.dashboard');
-    Route::resource('sessions', SessionController::class);
-});
 
-// Student routes
-Route::middleware(['auth', 'role:student'])->group(function () {
-    Route::get('/student/dashboard', [StudentDashboardController::class, 'index'])->name('student.dashboard');
-});
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

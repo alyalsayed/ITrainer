@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Instructor;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Instructor\SessionRequest;
 use Illuminate\Http\Request;
+use App\Models\TrackSession;
 use App\Models\Track;
-use App\Models\Session;
+use App\Http\Requests\SessionRequest;
+use Illuminate\Support\Facades\Auth;
 
 
 class SessionController extends Controller
@@ -16,8 +17,9 @@ class SessionController extends Controller
      */
     public function index()
     {
-        $all_sessions = Session::all();
-        return view('instructor.sessions.index', compact('all_sessions'));
+        $user = Auth::user();
+        $all_sessions =TrackSession::whereIn('track_id', $user->tracks->pluck('id'))->get();
+       return view('sessions.index', compact('all_sessions'));
     }
 
     /**
@@ -25,8 +27,7 @@ class SessionController extends Controller
      */
     public function create()
     {
-        $tracks = Track::all();
-        return view('instructor.sessions.create', compact('tracks'));
+        return view('sessions.create');
     }
 
     /**
@@ -34,9 +35,12 @@ class SessionController extends Controller
      */
     public function store(SessionRequest $request)
     {
-        Session::create([
+        $request->validated();
+        $user = Auth::user();
+        $trackId = $user->tracks->first()->id;
+        TrackSession::create([
             'name' => $request->name,
-            'track_id' => $request->track_id,
+            'track_id' => $trackId,
             'session_date' => $request->session_date,
             'description' => $request->description,
             'location' => $request->location,
@@ -52,8 +56,8 @@ class SessionController extends Controller
      */
     public function show(string $id)
     {
-        $session_data = Session::with('track')->findOrFail($id);
-        return view('instructor.sessions.show', compact('session_data'));
+        $session_data = TrackSession::with('track')->findOrFail($id);
+        return view('sessions.show', compact('session_data'));
     }
 
     /**
@@ -61,9 +65,9 @@ class SessionController extends Controller
      */
     public function edit(string $id)
     {
-        $session = Session::findOrFail($id);
-        $tracks = Track::all();
-        return view('instructor.sessions.edit', compact('session', 'tracks'));
+        $session = TrackSession::findOrFail($id);
+        // $tracks = Track::all();
+        return view('sessions.edit', compact('session'));
     }
 
     /**
@@ -71,10 +75,9 @@ class SessionController extends Controller
      */
     public function update(SessionRequest $request, string $id)
     {
-        $session = Session::findOrFail($id);
+        $session = TrackSession::findOrFail($id);
         $session->update([
             'name' => $request->name,
-            'track_id' => $request->track_id,
             'session_date' => $request->session_date,
             'description' => $request->description,
             'location' => $request->location,
@@ -90,7 +93,7 @@ class SessionController extends Controller
      */
     public function destroy(string $id)
     {
-        $session = Session::findOrFail($id);
+        $session = TrackSession::findOrFail($id);
         $session->delete();
 
         return redirect()->route('sessions.index')->with('success', 'Session deleted successfully');

@@ -15,29 +15,12 @@
     <form action="{{ route('sessions.store') }}" method="POST">
         @csrf
         {{-- Session Name --}}
-        <div class="form-group">
+        <div class="form-group my-3">
             <label for="name">Session Name</label>
             <input type="text" id="name" name="name" class="form-control" value="{{ old('name') }}" required>
             @if($errors->has('name'))
                 <div class="text-danger">
                     {{ $errors->first('name') }}
-                </div>
-            @endif
-        </div>
-
-        {{-- Track --}}
-        <div class="form-group">
-            <label for="track_id">Track</label>
-            <select id="track_id" name="track_id" class="form-control" required>
-                @foreach($tracks as $track)
-                    <option value="{{ $track->id }}" {{ old('track_id') == $track->id ? 'selected' : '' }}>
-                        {{ $track->name }}
-                    </option>
-                @endforeach
-            </select>
-            @if($errors->has('track_id'))
-                <div class="text-danger">
-                    {{ $errors->first('track_id') }}
                 </div>
             @endif
         </div>
