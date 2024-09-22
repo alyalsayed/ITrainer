@@ -7,6 +7,89 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
+## Installation Process
+
+### Prerequisites
+
+Before you begin, ensure you have the following installed on your machine:
+
+- PHP (version >= 7.3)
+- Composer
+- Node.js and npm
+- A database (MySQL, PostgreSQL, etc.)
+
+### Steps to Install
+
+1. **Clone the Repository**
+
+   Open your terminal and run the following command to clone the project:
+
+   ```bash
+   git clone https://github.com/alyalsayed/ITrainer.git
+
+2. **Navigate to the Project Directory**
+
+   After cloning the repository, change your working directory to the project folder:
+  
+   ```bash
+   cd ITrainer
+
+3. **Install PHP Dependencies**
+   
+   The project uses PHP dependencies that need to be installed via Composer. To install them, run the following command:
+   
+    ```bash
+    composer install
+
+4. **Set Up Environment Variables**
+
+    Laravel requires environment variables to be configured. Copy the .env.example file to .env and update it with your database 
+    credentials:
+    ```bash
+    cp .env.example .env
+
+  Edit the .env file with your preferred database connection and other configurations.
+
+5. **Generate Application Key**
+    
+    Laravel requires a unique application key. You can generate this key by running the following command:
+    
+    ```bash
+    php artisan key:generate
+
+6. **Run Database Migrations**
+
+    ```bash
+    php artisan migrate
+
+7. **Install Frontend Dependencies**
+
+    The project uses frontend assets like JavaScript and CSS that need to be installed using npm. To install them, run:
+        
+    ```bash
+      npm install
+
+8. **Build Assets**    
+
+    Laravel projects typically use a tool like Vite to compile frontend assets. You can build the assets by running the following          command:
+    
+    ```bash
+    npm run build
+
+  If you’re working in development mode and need hot-reloading, use:
+
+     npm run dev
+
+9. **Start the Development Server**
+
+    Now that everything is set up, you can start the Laravel development server. This will run the application locally on your machine:
+
+    ```bash
+    php artisan serve
+  Your application will now be accessible at http://localhost:8000.
+
+
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
