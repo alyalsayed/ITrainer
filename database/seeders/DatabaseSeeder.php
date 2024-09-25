@@ -16,17 +16,48 @@ class DatabaseSeeder extends Seeder
         // Seed Users
         DB::table('users')->insert([
             [
-                'name' => 'Admin User',
-                'email' => 'admin@gmail.com',
-                'password' => Hash::make('password123'),
-                'userType' => 'admin',
-            ],
-            [
                 'name' => 'Student User',
                 'email' => 'student@gmail.com',
                 'password' => Hash::make('password123'),
                 'userType' => 'student',
             ],
+            [
+                'name' => 'Student User',
+                'email' => 'std1@gmail.com',
+                'password' => Hash::make('password123'),
+                'userType' => 'student',
+            ],
+            [
+                'name' => 'Student User',
+                'email' => 'std2@gmail.com',
+                'password' => Hash::make('password123'),
+                'userType' => 'student',
+            ],
+            [
+                'name' => 'Student User',
+                'email' => 'std3@gmail.com',
+                'password' => Hash::make('password123'),
+                'userType' => 'student',
+            ],
+            [
+                'name' => 'Student User',
+                'email' => 'std4@gmail.com',
+                'password' => Hash::make('password123'),
+                'userType' => 'student',
+            ],
+            [
+                'name' => 'Student User',
+                'email' => 'std5@gmail.com',
+                'password' => Hash::make('password123'),
+                'userType' => 'student',
+            ],
+            [
+                'name' => 'Admin User',
+                'email' => 'admin@gmail.com',
+                'password' => Hash::make('password123'),
+                'userType' => 'admin',
+            ],
+           
             [
                 'name' => 'Instructor User',
                 'email' => 'instructor@gmail.com',
@@ -41,19 +72,7 @@ class DatabaseSeeder extends Seeder
             ],
         ]);
 
-        // Seed Instructors
-        // DB::table('instructors')->insert([
-        //     [
-        //         'user_id' => 1,
-        //         'name' => 'John Doe',
-        //         'email' => 'john.doe@example.com',
-        //     ],
-        //     [
-        //         'user_id' => 2,
-        //         'name' => 'Jane Smith',
-        //         'email' => 'jane.smith@example.com',
-        //     ],
-        // ]);
+       
 
         // Seed Tracks
         DB::table('tracks')->insert([
@@ -73,46 +92,33 @@ class DatabaseSeeder extends Seeder
             ],
         ]);
 
-        // Seed Track Sessions
-        // DB::table('track_sessions')->insert([
-        //     [
-        //         'id' => 1,
-        //         'name' => 'Introduction to HTML',
-        //         'track_id' => 1,  // Ensure this ID exists in tracks table
-        //         'session_date' => '2024-01-10',
-        //         'description' => 'A session on HTML basics.',
-        //         'location' => 'online',
-        //     ],
-        //     [
-        //         'id' => 2,
-        //         'name' => 'Advanced Data Analysis',
-        //         'track_id' => 2,  // Ensure this ID exists in tracks table
-        //         'session_date' => '2024-03-15',
-        //         'description' => 'Deep dive into data analysis techniques.',
-        //         'location' => 'offline',
-        //     ],
-        // ]);
-
-        // Seed Students
-        // DB::table('students')->insert([
-        //     [
-        //         'id' => 1,
-        //         'name' => 'Alice Johnson',
-        //         'email' => 'alice.johnson@example.com',
-        //         'track_id' => 1,  // Ensure this ID exists in tracks table
-        //     ],
-        //     [
-        //         'id' => 2,
-        //         'name' => 'Bob Brown',
-        //         'email' => 'bob.brown@example.com',
-        //         'track_id' => 2,  // Ensure this ID exists in tracks table
-        //     ],
-        // ]);
-
-        // Uncomment and seed additional tables if needed
-        // DB::table('attendance')->insert([...]);
-        // DB::table('tasks')->insert([...]);
-        // DB::table('task_submissions')->insert([...]);
-        // DB::table('session_notes')->insert([...]);
+        DB::table('track_user')->insert([
+            [
+                'track_id' => 1,
+                'user_id' => 1,
+            ],
+            [
+                'track_id' => 1,
+                'user_id' => 2,
+            ],
+            [
+                'track_id' => 1,
+                'user_id' => 3,
+            ],
+            [
+                'track_id' => 1,
+                'user_id' => 4,
+            ],
+            [
+                'track_id' => 1,
+                'user_id' => 5,
+            ],
+            [
+                'track_id' => 1,
+                'user_id' => 8,
+            ]
+        ]);
+        
+        
     }
 }

@@ -11,9 +11,10 @@
         </div>
     @endif
        
-        @if (Auth::user()->userType === 'instructor')
-    <a href="{{ route('sessions.create') }}" class="btn btn-primary mb-3">Add New Session</a>
+    @if (Auth::user()->userType === 'instructor')
+        <a href="{{ route('sessions.create') }}" class="btn btn-primary mb-3">Add New Session</a>
     @endif
+
     <table class="table table-striped table-bordered table-hover text-center">
         <thead>
             <tr>
@@ -33,18 +34,25 @@
                         <a href="{{ route('sessions.show', $session->id) }}" class="btn btn-info btn-sm" title="View">
                             <i class="fa fa-eye"></i>
                         </a>
+                        
                         @if (Auth::user()->userType === 'instructor')
-                        <a href="{{ route('sessions.edit', $session->id) }}" class="btn btn-warning btn-sm m-2" title="Edit">
-                            <i class="fa fa-pencil"></i>
-                        </a>
-                        <form action="{{ route('sessions.destroy', $session->id) }}" method="POST" style="display:inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')" title="Delete">
-                                <i class="fa fa-trash"></i>
-                            </button>
-                        </form>
+                            <a href="{{ route('sessions.edit', $session->id) }}" class="btn btn-warning btn-sm m-2" title="Edit">
+                                <i class="fa fa-pencil"></i>
+                            </a>
+                            
+                            <form action="{{ route('sessions.destroy', $session->id) }}" method="POST" style="display:inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')" title="Delete">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </form>
                         @endif
+
+                        <!-- Attendance Icon -->
+                        <a href="{{ route('attendance.index', $session->id) }}" class="btn btn-secondary btn-sm m-2" title="Show Attendance">
+                            <i class="fa fa-check-square"></i>
+                        </a>
                     </td>
                 </tr>
             @endforeach

@@ -14,8 +14,8 @@
                         <i class="menu-icon fa fa-tasks"></i>Tasks
                     </a>
                     <ul class="sub-menu children dropdown-menu">
-                        <li><i class="fa fa-list"></i><a href="#">All Tasks</a></li>
-                        <li><i class="fa fa-plus"></i><a href="#">Add Task</a></li>
+                        <li><i class="fa fa-list"></i><a href="{{ route('tasks.index') }}">All Tasks</a></li>
+                        <li><i class="fa fa-plus"></i><a href="{{ route('tasks.create') }}">Add Task</a></li>
                     </ul>
                 </li>
                 <li class="menu-item-has-children dropdown">

@@ -55,4 +55,8 @@ class User extends Authenticatable
     {
         return $this->hasManyThrough(TrackSession::class, Track::class, 'user_id', 'track_id', 'id', 'id');
     }
+    public function tasks()
+    {
+        return $this->hasMany(TaskSubmission::class, 'student_id');
+    }
 }
