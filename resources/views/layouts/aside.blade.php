@@ -45,6 +45,15 @@
                         <li><i class="fa fa-plus"></i><a href="#">Mark Attendance</a></li>
                     </ul>
                 </li>
+                <li class="menu-item-has-children dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="menu-icon fa fa-sticky-note"></i>Quizzes
+                    </a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="fa fa-sticky-note"></i><a href="#">All Quizzes</a></li>
+                        <li><i class="fa fa-plus"></i><a href="#">Add Quiz</a></li>
+                    </ul>
+                </li>
             @endif
 
             {{-- Admin-specific menu --}}
