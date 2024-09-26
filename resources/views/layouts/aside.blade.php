@@ -50,8 +50,8 @@
                         <i class="menu-icon fa fa-sticky-note"></i>Quizzes
                     </a>
                     <ul class="sub-menu children dropdown-menu">
-                        <li><i class="fa fa-sticky-note"></i><a href="#">All Quizzes</a></li>
-                        <li><i class="fa fa-plus"></i><a href="#">Add Quiz</a></li>
+                        <li><i class="fa fa-sticky-note"></i><a href="{{route('quizzes.index')}}">All Quizzes</a></li>
+                        <li><i class="fa fa-plus"></i><a href="{{route('quizzes.create')}}">Add Quiz</a></li>
                     </ul>
                 </li>
             @endif
