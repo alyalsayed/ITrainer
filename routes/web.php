@@ -10,6 +10,8 @@ use App\Http\Controllers\SessionController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\SessionNoteController;
+use App\Models\Quiz;
+use App\Http\Controllers\QuizController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -40,6 +42,9 @@ Route::middleware(['auth', 'role:instructor'])->group(function () {
 
     // Task Routes
     Route::resource('tasks', TaskController::class);
+
+    // Quiz Routes
+    Route::resource('quizzes', QuizController::class);
     
     // Attendance Routes
     Route::get('attendance/{sessionId}', [AttendanceController::class, 'showAttendanceForm'])->name('attendance.index');
