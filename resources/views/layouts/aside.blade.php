@@ -6,7 +6,9 @@
             <li>
                 <a href="#"><i class="menu-icon fa fa-laptop"></i>Dashboard</a>
             </li>
-
+            <li>
+                <a href="{{ route('chat.index') }}"><i class="menu-icon fa fa-comments"></i>Chat</a>
+            </li>
             {{-- Instructor-specific menu --}}
             @if(Auth::user()->userType === 'instructor')
                 <li class="menu-item-has-children dropdown">

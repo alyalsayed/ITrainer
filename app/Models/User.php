@@ -21,8 +21,10 @@ class User extends Authenticatable
         'email',
         'password',
         'userType',
+        'profile_image',
+        'last_seen',
     ];
-
+   
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -44,6 +46,7 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'userType' => 'string',
+            'last_seen' => 'datetime',
         ];
     }
     public function tracks()
@@ -58,5 +61,10 @@ class User extends Authenticatable
     public function tasks()
     {
         return $this->hasMany(TaskSubmission::class, 'student_id');
+    }
+
+    public function messages()
+    {
+        return $this->hasMany(Message::class, 'receiver_id');
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Events\MessageSent;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
@@ -10,10 +11,20 @@ use App\Http\Controllers\SessionController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\SessionNoteController;
+use App\Http\Controllers\ChatController;
+
 
 Route::get('/', function () {
     return view('welcome');
 });
+
+// Route::get('/chat', function () {
+//     broadcast(new MessageSent());
+// });
+
+Route::get('/chat/{receiver_id?}', [ChatController::class, 'index'])->name('chat.index');
+Route::post('/send-message', [ChatController::class, 'sendMessage'])->name('chat.send');
+Route::get('/fetch-messages', [ChatController::class, 'fetchMessages'])->name('chat.fetch');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

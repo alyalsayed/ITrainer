@@ -26,11 +26,11 @@
             </div>
         </div>
 
-        <div class="clearfix"></div>
+        <div class="clearfix bg-white"></div>
 
-        <footer class="site-footer">
+        {{-- <footer class="site-footer">
             @include('layouts.footer')
-        </footer>
+        </footer> --}}
 
     </div><!-- /#right-panel -->
 
