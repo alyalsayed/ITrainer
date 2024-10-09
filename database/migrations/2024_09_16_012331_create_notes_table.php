@@ -11,15 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('session_notes', function (Blueprint $table) {
-            $table->unsignedBigInteger('id', true)->primary();
-            $table->unsignedBigInteger('session_id');
-            $table->string('title')->nullable();
-            $table->foreign('session_id')->references('id')->on('track_sessions');
-            $table->enum('type', ['screenshot', 'code', 'text']);
-            $table->text('content');
-            $table->timestamps();
-        });
+        // Check if the table already exists
+        if (!Schema::hasTable('session_notes')) {
+            Schema::create('session_notes', function (Blueprint $table) {
+                $table->unsignedBigInteger('id', true)->primary();
+                $table->unsignedBigInteger('session_id');
+                $table->string('title')->nullable();
+                $table->foreign('session_id')->references('id')->on('track_sessions')->onDelete('cascade');
+                $table->enum('type', ['screenshot', 'code', 'text']);
+                $table->text('content');
+                $table->timestamps();
+            });
+        }
     }
 
     /**
@@ -27,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('notes');
+        Schema::dropIfExists('session_notes');
     }
 };

@@ -17,7 +17,13 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->date('start_date');
             $table->date('end_date');
+            $table->unsignedBigInteger('instructor_id')->nullable(); // Removed after() method
+            $table->unsignedBigInteger('hr_id')->nullable(); // Removed after() method
             $table->timestamps();
+
+            // Foreign keys
+            $table->foreign('instructor_id')->references('id')->on('users')->onDelete('set null');
+            $table->foreign('hr_id')->references('id')->on('users')->onDelete('set null');
         });
     }
 

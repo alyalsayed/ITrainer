@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -20,7 +19,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'userType',
+        'userType', // Changed to match database column
     ];
 
     /**
@@ -36,18 +35,13 @@ class User extends Authenticatable
     /**
      * Get the attributes that should be cast.
      *
-     * @return array<string, string>
+     * @var array<string, string>
      */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-            'userType' => 'string',
-        ];
-    }
-    public function hasRole(string $role): bool
-    {
-        return $this->userType === $role;
-    }
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+        'userType' => 'string', // Changed to match database column
+    ];
+
+    const USER_TYPES = ['admin', 'student', 'instructor', 'hr'];
 }
