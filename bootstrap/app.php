@@ -4,12 +4,7 @@ use App\Http\Middleware\CheckRole;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-<<<<<<< HEAD
-use Illuminate\Auth\Middleware\Authenticate;
-use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
-=======
 use App\Http\Middleware\UpdateLastSeenMiddleware;
->>>>>>> origin/master
 
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -21,15 +16,6 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(
         function (Middleware $middleware) {
-<<<<<<< HEAD
-            // Alias middleware 'role' to CheckRole::class
-            $middleware->alias([
-                'role' => CheckRole::class,
-                'auth' => Authenticate::class, // Ensure 'auth' middleware is defined
-                'csrf' => VerifyCsrfToken::class, // CSRF protection
-            ]);
-        }
-=======
             $middleware->alias([
                 'role' => CheckRole::class,
                 'update.last.seen' => UpdateLastSeenMiddleware::class
@@ -37,8 +23,8 @@ return Application::configure(basePath: dirname(__DIR__))
             ]);
         },
       
->>>>>>> origin/master
     )
+   
     ->withExceptions(function (Exceptions $exceptions) {
-        // You can add exception handling here if needed
+        //
     })->create();
