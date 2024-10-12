@@ -1,8 +1,10 @@
-<!doctype html>
-<html class="no-js" lang="">
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
     @include('layouts.head')
+   
+
 </head>
 
 <body>
@@ -13,16 +15,27 @@
         <header id="header" class="header">
             @include('layouts.right-header')
         </header>
-
-        <div class="breadcrumbs">
-            @yield('breadcrumbs')
+        @if (session('login_success'))
+        <div id="login-alert" class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('login_success') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
+    @endif
+    
+
+
+        
+        {{-- <div class="breadcrumbs">
+            @yield('breadcrumbs')
+        </div> --}}
 
         <div class="content">
             <div class="animated fadeIn">
-                <div class="row">
+                {{-- <div class="row"> --}}
                     @yield('content')
-                </div>
+                {{-- </div> --}}
             </div>
         </div>
 
@@ -38,6 +51,8 @@
 
     <!-- Scripts -->
     @include('layouts.scripts')
+
+    @yield('charts')
 </body>
 
 </html>

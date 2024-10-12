@@ -4,7 +4,10 @@
 
 @section('content')
 <div class="container mt-4">
-    <h1>Create Task</h1>
+    <h1 class="mb-4">Create New Task</h1>
+    <h3 class="mb-4"> Session title : {{ $session->name }} </h3>
+    <h3 class="mb-4"> Session Date :  ({{ $session->session_date->format('F j, Y') }})  </h3>
+
 
     {{-- General error message for invalid form submission --}}
     @if ($errors->any())
@@ -13,7 +16,8 @@
         </div>
     @endif
 
-    <form action="{{ route('tasks.store') }}" method="POST">
+    {{-- The form action now targets session-specific task creation --}}
+    <form action="{{ route('sessions.tasks.store', $session->id) }}" method="POST">
         @csrf
 
         {{-- Task Name --}}
@@ -45,24 +49,6 @@
             @if($errors->has('due_date'))
                 <div class="text-danger">
                     {{ $errors->first('due_date') }}
-                </div>
-            @endif
-        </div>
-
-        {{-- Session --}}
-        <div class="form-group my-3">
-            <label for="session_id">Session</label>
-            <select name="session_id" id="session_id" class="form-control" required>
-                <option value="" disabled selected>Select a session</option>
-                @foreach($sessions as $session)
-                    <option value="{{ $session->id }}" {{ old('session_id') == $session->id ? 'selected' : '' }}>
-                        {{ $session->name }} ({{ $session->session_date->format('F j, Y') }})
-                    </option>
-                @endforeach
-            </select>
-            @if($errors->has('session_id'))
-                <div class="text-danger">
-                    {{ $errors->first('session_id') }}
                 </div>
             @endif
         </div>

@@ -6,7 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\TrackSession;
 use App\Models\SessionNote;
-
+use Illuminate\Support\Facades\Storage;
+use  App\Notifications\NotesPublished;
 class SessionNoteController extends Controller
 {
     /**
@@ -20,108 +21,104 @@ class SessionNoteController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create($sessionId)
-    {
-        $session = TrackSession::findOrFail($sessionId);
-        return view('notes.create', compact('session'));
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request, $sessionId)
     {
-        // Validate the request
+        $contentRule = $request->type === 'screenshot' ? 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048' : 'required|string';
         $request->validate([
             'title' => 'required|string|max:255',
-            'type' => 'required|in:text,code,screenshot',
-            'content' => $request->type === 'screenshot' ? 'nullable' : 'required'
+            'type' => 'required|string|in:text,code,screenshot',
+            'content' => $contentRule,
         ]);
-    
+
+
         $note = new SessionNote();
-        $note->session_id = $sessionId;
         $note->title = $request->title;
         $note->type = $request->type;
-    
-        // Handle content based on the type
-        if ($request->type === 'screenshot' && $request->hasFile('content')) {
-            // Store image
-            $path = $request->file('content')->store('images', 'public');
-            $note->content = $path;
-        } else {
-            // Store text or code
-            $note->content = $request->content;
-        }
-    
-        $note->save();
-    
-        return redirect()->route('notes.index', $sessionId)->with('success', 'Note created successfully.');
-    }
-    
-    public function update(Request $request, $id)
-    {
-        // Validate the request, including the note type
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'type' => 'required|in:text,code,screenshot',
-            'content' => $request->type === 'screenshot' ? 'nullable' : 'required'
-        ]);
-    
-        $note = SessionNote::findOrFail($id);
-        $note->title = $request->title;
-        $note->type = $request->type; // Update the type
-    
-        // Handle content based on the updated type
-        if ($note->type === 'screenshot') {
+
+        if ($request->type == 'screenshot') {
+
             if ($request->hasFile('content')) {
-                // Store the new image if uploaded
-                $path = $request->file('content')->store('images', 'public');
+                $path = $request->file('content')->store('notes/images', 'public');
                 $note->content = $path;
-            } else {
-                // Keep existing image if no new one is uploaded
-                $note->content = $note->content; // This keeps the current content
             }
         } else {
-            // Store text or code
+
             $note->content = $request->content;
         }
-    
+
+        $note->session_id = $sessionId;
         $note->save();
-    
-        return redirect()->route('notes.index', $note->session_id)->with('success', 'Note updated successfully.');
-    }
-    
-    
-    
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
+        return redirect()->route('notes.index', $sessionId)->with('success', 'Note added successfully!');
+    }
+
+
+
+    public function update(Request $request, $sessionId, $noteId)
     {
-        $note = SessionNote::findOrFail($id);
-        return view('notes.edit', compact('note'));
+        $contentRule = $request->type === 'screenshot' ? 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048' : 'required|string';
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'type' => 'required|string|in:text,code,screenshot',
+            'content' => $contentRule,
+        ]);
+
+
+        $note = SessionNote::findOrFail($noteId);
+        $note->title = $request->title;
+        $note->type = $request->type;
+
+        if ($request->type === 'screenshot') {
+            if ($request->hasFile('content')) {
+                // Delete the old image if necessary
+                Storage::disk('public')->delete($note->content); // Delete the old image from storage
+                $path = $request->file('content')->store('notes/images', 'public'); // Store the new image
+                $note->content = $path; // Update the path in the database
+            } else {
+                // If no new image is uploaded, retain the old image path
+                $note->content = $note->content; // Keep the old content
+            }
+        } else {
+            $note->content = $request->content; // Save text/code content directly
+        }
+
+        $note->save();
+
+        return redirect()->route('notes.index', $sessionId)->with('success', 'Note updated successfully!');
     }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    
-    
-    
-
-
-
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy($sessionId, $id)
     {
-        $note = SessionNote::findOrFail($id);
+        // Fetch the session and note
+        $session = TrackSession::findOrFail($sessionId);
+        $note = $session->notes()->findOrFail($id);
+
+        // Delete the note's image if it exists
+        if ($note->type === 'screenshot' && $note->content && Storage::disk('public')->exists($note->content)) {
+            Storage::disk('public')->delete($note->content);
+        }
+
+        // Delete the note
         $note->delete();
 
-        return redirect()->back()->with('success', 'Note deleted successfully.');
+        return redirect()->route('notes.index', $sessionId)->with('success', 'Note deleted successfully!');
+    }
+    public function publish(Request $request, $sessionId)
+    {
+        // Find the session
+        $session = TrackSession::findOrFail($sessionId);
+
+        // Notify all students in the session's track
+        $students = $session->track->users()->where('userType', 'student')->get();
+
+        foreach ($students as $student) {
+                $student->notify(new NotesPublished( $session));
+        }
+
+        return redirect()->route('notes.index', $sessionId)->with('success', 'Notes published and students notified successfully!');
     }
 }

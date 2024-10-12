@@ -49,10 +49,10 @@ class User extends Authenticatable
             'last_seen' => 'datetime',
         ];
     }
-    public function tracks()
-    {
-        return $this->belongsToMany(Track::class, 'track_user', 'user_id', 'track_id');
+    public function tracks() {
+        return $this->belongsToMany(Track::class);
     }
+    
 
     public function sessions()
     {

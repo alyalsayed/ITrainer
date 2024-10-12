@@ -31,7 +31,7 @@
                     <td>{{ $session->session_date->format('F j, Y') }}</td>
                     <td>{{ ucfirst($session->location) }}</td>
                     <td class="d-flex justify-content-center align-items-center">
-                        <a href="{{ route('sessions.show', $session->id) }}" class="btn btn-info btn-sm" title="View">
+                        <a href="{{ route('sessions.show', $session->id) }}" class="btn btn-info btn-sm m-1" title="View">
                             <i class="fa fa-eye"></i>
                         </a>
                         
@@ -43,16 +43,27 @@
                             <form action="{{ route('sessions.destroy', $session->id) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')" title="Delete">
+                                <button type="submit" class="btn btn-danger btn-sm m-1" onclick="return confirm('Are you sure?')" title="Delete">
                                     <i class="fa fa-trash"></i>
                                 </button>
                             </form>
-                        @endif
 
-                        <!-- Attendance Icon -->
-                        <a href="{{ route('attendance.index', $session->id) }}" class="btn btn-secondary btn-sm m-2" title="Show Attendance">
+                             <!-- Attendance Icon -->
+                        <a href="{{ route('attendance.index', $session->id) }}" class="btn btn-secondary btn-sm m-1" title="Show Attendance">
                             <i class="fa fa-check-square"></i>
                         </a>
+
+                        @endif
+
+                        <!-- Notes Icon -->
+                        <a href="{{ route('notes.index', $session->id) }}" class="btn btn-primary btn-sm m-1" title="View Notes">
+                            <i class="fa fa-sticky-note"></i>
+                        </a>
+                           <!-- Task Icon -->
+                        <a href="{{ route('sessions.tasks.index', $session->id) }}" class="btn btn-success btn-sm m-1" title="View Tasks">
+                            <i class="fa fa-tasks"></i>
+                        </a>
+
                     </td>
                 </tr>
             @endforeach

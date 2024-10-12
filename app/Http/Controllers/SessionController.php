@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\TrackSession;
 use App\Models\Track;
 use App\Http\Requests\SessionRequest;
+use App\Notifications\NewSessionCreated;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -38,7 +39,7 @@ class SessionController extends Controller
         $request->validated();
         $user = Auth::user();
         $trackId = $user->tracks->first()->id;
-        TrackSession::create([
+        $session=TrackSession::create([
             'name' => $request->name,
             'track_id' => $trackId,
             'session_date' => $request->session_date,
@@ -47,6 +48,11 @@ class SessionController extends Controller
             'start_time' => $request->start_time,
             'end_time' => $request->end_time,
         ]);
+        $students = $session->track->users()->where('userType', 'student')->get();
+    
+        foreach ($students as $student) {
+            $student->notify(new NewSessionCreated($session));
+        }
 
         return redirect()->route('sessions.index')->with('success', 'Session created successfully');
     }
@@ -94,6 +100,8 @@ class SessionController extends Controller
     public function destroy(string $id)
     {
         $session = TrackSession::findOrFail($id);
+        $session->notes()->delete();
+        
         $session->delete();
 
         return redirect()->route('sessions.index')->with('success', 'Session deleted successfully');

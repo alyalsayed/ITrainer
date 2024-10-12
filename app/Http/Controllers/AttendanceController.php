@@ -16,16 +16,21 @@ class AttendanceController extends Controller
         // Get the session details
         $session = TrackSession::findOrFail($sessionId);
         $track = $session->track;
-
-        
+    
         // Fetch students registered for this track
         $students = $track->users()->where('userType', 'student')->get();
-
-        // Fetch existing attendance records for this session
+    
         $attendanceRecords = Attendance::where('session_id', $sessionId)->get()->keyBy('student_id');
-
-        return view('attendance.index', compact('session', 'students', 'attendanceRecords'));
+    
+        $attendanceRecord = null;
+        if (Auth::user()->userType === 'student') {
+            $attendanceRecord = $attendanceRecords[Auth::id()] ?? null; 
+        }
+        
+    
+        return view('attendance.index', compact('session', 'students', 'attendanceRecords', 'attendanceRecord'));
     }
+    
 
     public function storeAttendance(Request $request, $sessionId)
     {

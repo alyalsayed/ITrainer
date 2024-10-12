@@ -20,9 +20,9 @@ class TrackSession extends Model
         return $this->belongsTo(Track::class, 'track_id', 'id');
     }
     public function tasks()
-    {
-        return $this->hasMany(Task::class);
-    }
+{
+    return $this->hasMany(Task::class, 'session_id');
+}
     public function notes()
     {
         return $this->hasMany(SessionNote::class, 'session_id');
