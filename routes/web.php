@@ -1,9 +1,8 @@
 <?php
 
-<<<<<<< HEAD
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\HR\DashboardController;
+use App\Http\Controllers\HR\DashboardController as HrDashboardController;
 use App\Http\Controllers\Admin\AdminHomeController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\AdminTrackController;
@@ -13,26 +12,14 @@ use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminAttendanceController;
 use App\Http\Controllers\Admin\AdminNotificationController;
 use App\Http\Controllers\Admin\AdminSessionController; // Updated
-use App\Http\Controllers\HR\DashboardController as HrDashboardController;
-use App\Http\Controllers\Student\DashboardController as StudentDashboardController;
-use App\Http\Controllers\Instructor\DashboardController as InstructorDashboardController;
-=======
-use App\Events\MessageSent;
-use App\Http\Controllers\ProfileController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
-use App\Http\Controllers\Hr\DashboardController as HrDashboardController;
 use App\Http\Controllers\Instructor\DashboardController as InstructorDashboardController;
 use App\Http\Controllers\Student\DashboardController as StudentDashboardController;
-use App\Http\Controllers\SessionController;
-use App\Http\Controllers\AttendanceController;
-use App\Http\Controllers\TaskController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\SessionNoteController;
 use App\Http\Controllers\ChatController;
-use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\TaskController;
 use App\Livewire\TodoList;
-
->>>>>>> origin/master
 
 Route::get('/', function () {
     return view('welcome');
@@ -66,7 +53,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('notifications', [NotificationController::class, 'destroyAll'])->name('notifications.destroyAll');
 
     Route::get('/todo', TodoList::class)->name('todo.index');
-
 });
 
 // Admin Routes Group
@@ -79,15 +65,13 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
 
     // User Management Resource Routes
     Route::get('/users/table', [AdminUserController::class, 'showUsersByType'])->name('users.table');
-
     Route::resource('users', AdminUserController::class)
-        ->only(['index', 'show', 'update', 'create', 'destroy','store','edit']);
+        ->only(['index', 'show', 'update', 'create', 'destroy', 'store', 'edit']);
 
     // Admin Settings Routes
     Route::resource('settings', AdminSettingsController::class)->only(['index', 'update']);
     Route::put('/password/update', [AdminSettingsController::class, 'updatePassword'])->name('password.update');
     Route::put('/settings/{id}', [AdminSettingsController::class, 'update'])->name('settings.update');
-
 
     // Additional Setting Routes
     Route::get('/settings/general', [AdminSettingsController::class, 'generalSettings'])->name('settings.general');
@@ -110,15 +94,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
 
 // Instructor routes 
 Route::middleware(['auth', 'role:instructor'])->group(function () {
-
     Route::get('/instructor/dashboard', [InstructorDashboardController::class, 'index'])->name('instructor.dashboard');
-
-    // Session Routes
     Route::resource('sessions', SessionController::class); // Includes all CRUD operations
 
     // Task Routes
-    // Route::resource('tasks', TaskController::class);
-
     Route::get('sessions/{session}/tasks', [TaskController::class, 'index'])->name('sessions.tasks.index');
     Route::get('sessions/{session}/tasks/create', [TaskController::class, 'create'])->name('sessions.tasks.create');
     Route::post('sessions/{session}/tasks', [TaskController::class, 'store'])->name('sessions.tasks.store');
@@ -133,7 +112,6 @@ Route::middleware(['auth', 'role:instructor'])->group(function () {
     Route::post('sessions/{sessionId}/tasks/{taskId}/submissions/{submissionId}/grade', [TaskController::class, 'grade'])
         ->name('sessions.tasks.grade');
 
-
     // Attendance Routes
     Route::post('attendance/{sessionId}', [AttendanceController::class, 'storeAttendance'])->name('attendance.store');
 
@@ -142,8 +120,6 @@ Route::middleware(['auth', 'role:instructor'])->group(function () {
     Route::put('sessions/{sessionId}/notes/{id}', [SessionNoteController::class, 'update'])->name('notes.update'); // Update existing note for a session
     Route::delete('sessions/{sessionId}/notes/{id}', [SessionNoteController::class, 'destroy'])->name('notes.destroy'); // Delete note for a session
     Route::post('/sessions/{sessionId}/notes/publish', [SessionNoteController::class, 'publish'])->name('notes.publish');
-
-
 });
 
 // Shared routes for both students and instructors
@@ -156,33 +132,18 @@ Route::middleware(['auth', 'role:student,instructor'])->group(function () {
     Route::get('attendance/{sessionId}', [AttendanceController::class, 'showAttendanceForm'])->name('attendance.index');
 
     Route::get('sessions/{sessionId}/notes', [SessionNoteController::class, 'index'])->name('notes.index'); // List notes for a session
-
-
 });
+
 // Student routes
 Route::middleware(['auth', 'role:student'])->group(function () {
     Route::get('/student/dashboard', [StudentDashboardController::class, 'index'])->name('student.dashboard');
     Route::post('sessions/{session}/tasks/{task}/submit', [TaskController::class, 'submit'])->name('sessions.tasks.submit');
 });
+
 // HR routes
 Route::middleware(['auth', 'role:hr'])->group(function () {
     Route::get('/hr/dashboard', [HrDashboardController::class, 'index'])->name('hr.dashboard');
 });
 
-<<<<<<< HEAD
-// Instructor routes
-Route::middleware(['auth', 'role:instructor'])->group(function () {
-    Route::get('/instructor/dashboard', [InstructorDashboardController::class, 'index'])->name('instructor.dashboard');
-    Route::resource('sessions',SessionController::class); // Ensure this references the instructor's SessionController
-});
-
-// Student routes
-Route::middleware(['auth', 'role:student'])->group(function () {
-    Route::get('/student/dashboard', [StudentDashboardController::class, 'index'])->name('student.dashboard');
-});
-
-require __DIR__.'/auth.php';
-=======
-
 require __DIR__ . '/auth.php';
->>>>>>> origin/master
+
