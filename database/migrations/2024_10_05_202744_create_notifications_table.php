@@ -11,16 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('notifications', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('user_id'); // Notification for which user
-            $table->string('type'); // Type of notification (e.g. "system", "email")
-            $table->string('message'); // Notification message
-            $table->boolean('is_read')->default(false); // Whether the notification is read
-            $table->timestamps();
+        // Check if the table does not exist before creating it
+        if (!Schema::hasTable('notifications')) {
+            Schema::create('notifications', function (Blueprint $table) {
+                $table->id();
+                $table->unsignedBigInteger('user_id'); // Notification for which user
+                $table->string('type'); // Type of notification (e.g. "system", "email")
+                $table->string('message'); // Notification message
+                $table->boolean('is_read')->default(false); // Whether the notification is read
+                $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-        });
+                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            });
+        }
     }
 
     /**

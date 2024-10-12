@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use App\Models\Track;
+use App\Models\TrackSession;
+use App\Models\TaskSubmission;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
@@ -19,15 +21,11 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-<<<<<<< HEAD
-        'userType', // Changed to match database column
-=======
-        'userType',
+        'userType', // Ensuring it matches the database column
         'profile_image',
         'last_seen',
->>>>>>> origin/master
     ];
-   
+
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -39,45 +37,44 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * The attributes that should be cast.
      *
      * @var array<string, string>
      */
-<<<<<<< HEAD
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
-        'userType' => 'string', // Changed to match database column
+        'userType' => 'string', // Ensuring it matches the database column
+        'last_seen' => 'datetime',
     ];
 
     const USER_TYPES = ['admin', 'student', 'instructor', 'hr'];
-=======
-    protected function casts(): array
+
+    /**
+     * Relationships
+     */
+
+    // Many-to-Many: A user can belong to many tracks
+    public function tracks()
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-            'userType' => 'string',
-            'last_seen' => 'datetime',
-        ];
-    }
-    public function tracks() {
         return $this->belongsToMany(Track::class);
     }
-    
 
+    // HasManyThrough: A user has many sessions through tracks
     public function sessions()
     {
         return $this->hasManyThrough(TrackSession::class, Track::class, 'user_id', 'track_id', 'id', 'id');
     }
+
+    // One-to-Many: A user (student) can submit many tasks
     public function tasks()
     {
         return $this->hasMany(TaskSubmission::class, 'student_id');
     }
 
+    // One-to-Many: A user can receive many messages
     public function messages()
     {
         return $this->hasMany(Message::class, 'receiver_id');
     }
->>>>>>> origin/master
 }

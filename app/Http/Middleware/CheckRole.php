@@ -1,17 +1,11 @@
 <?php
-<<<<<<< HEAD
-=======
 
-
-// https://stackoverflow.com/questions/43901719/laravel-middleware-with-multiple-roles
-
-
->>>>>>> origin/master
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use Symfony\Component\HttpFoundation\Response;
 
 class CheckRole
 {
@@ -20,31 +14,24 @@ class CheckRole
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
-     * @param  string  $role
-     * @return mixed
+     * @param  mixed  ...$roles  // Allow multiple roles as arguments
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-<<<<<<< HEAD
-    public function handle($request, Closure $next, $role)
+    public function handle(Request $request, Closure $next, ...$roles): Response
     {
+        // If the user is not authenticated, redirect to login
         if (!Auth::check()) {
             return redirect('login');
         }
 
         $user = Auth::user();
-        if ($user->userType !== $role) {
-            abort(403, 'Unauthorized access');
-        }
 
-        return $next($request);
-=======
-    public function handle(Request $request, Closure $next,   ...$roles): Response
-    {
-       
-        if (in_array(Auth::user()->userType, $roles)) {
+        // Check if the user's role matches any of the provided roles
+        if (in_array($user->userType, $roles)) {
             return $next($request);
         }
 
-        abort(403);
->>>>>>> origin/master
+        // If the role doesn't match, deny access
+        abort(403, 'Unauthorized access');
     }
 }

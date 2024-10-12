@@ -2,34 +2,25 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\TrackSession;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class SessionNote extends Model
 {
     use HasFactory;
 
-<<<<<<< HEAD
+    // Fields that can be mass-assigned
     protected $fillable = [
         'session_id',
         'title',
         'type',
         'content',
     ];
-=======
-    protected $fillable = ['session_id', 'title', 'type', 'content'];
->>>>>>> origin/master
 
+    // Relationship: A session note belongs to a track session
     public function session()
     {
-        return $this->belongsTo(TrackSession::class);
+        return $this->belongsTo(TrackSession::class, 'session_id');
     }
-<<<<<<< HEAD
-    public function trackSession()
-    {
-        return $this->belongsTo(TrackSession::class, 'track_session_id');
-    }
-
-=======
->>>>>>> origin/master
 }

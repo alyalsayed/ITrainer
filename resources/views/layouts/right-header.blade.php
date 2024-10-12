@@ -24,20 +24,7 @@
                 </form>
             </div>
 
-<<<<<<< HEAD
-                <!-- Notifications Dropdown -->
-                <div class="dropdown for-notification">
-                    <a href="{{ route('admin.notifications.index') }}" class="btn btn-secondary dropdown-toggle" type="button" id="notification"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fa fa-bell"></i>
-                        <span class="count bg-danger" id="notification-count">0</span>
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="notification" id="notification-menu">
-                        <p class="red">You have <span id="notification-count-text">0</span> Notification(s)</p>
-                        <!-- Dynamic notifications will be injected here -->
-                        <div id="notification-list"></div>
-=======
-            <!-- Task Notification Dropdown -->
+            <!-- Notifications Dropdown -->
             <div class="dropdown for-notification">
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="notification" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="fa fa-bell"></i>
@@ -57,98 +44,85 @@
                             <p>No new notifications</p>
                         </div>
                     @else
-                    @foreach(Auth::user()->unreadNotifications as $notification)
-                    @if($notification->type === 'App\Notifications\TaskAddedNotification')
-                        @php
-                            $sessionId = $notification->data['session_id'] ?? null; 
-                            $taskId = $notification->data['task_id'] ?? null; 
-                        @endphp
-                        @if($sessionId && $taskId)
-                            <div class="dropdown-item d-flex align-items-center">
-                                <a href="{{ route('sessions.tasks.show', ['session' => $sessionId, 'task' => $taskId]) }}" class="flex-grow-1">
-                                    <div class="icon-circle bg-info text-white mr-2">
-                                        <i class="fa fa-tasks"></i>
-                                    </div>
-                                    <div>
-                                        <div class="small text-gray-500">{{ $notification->created_at->diffForHumans() }}</div>
-                                        <span class="font-weight-bold">New Task: {{ $notification->data['task_name'] }}</span>
-                                        <div class="small text-muted">
-                                            Description: {{ $notification->data['task_description'] ?? 'No description available' }}
-                                        </div>
-                                        <div class="small text-muted">
-                                            Due Date: {{ $notification->data['task_due_date'] ?? 'No due date' }}
-                                        </div>
-                                    </div>
-                                </a>
-                                <form id="mark-as-read-{{ $notification->id }}" action="{{ route('notifications.markAsRead', $notification->id) }}" method="GET" style="display: inline;">
-                                    @csrf
-                                    <button type="submit" class="btn btn-primary btn-sm" title="Mark as read">
-                                        <i class="fa fa-check m-auto"></i>
-                                    </button>
-                                </form>
-                            </div>
-                            <div class="dropdown-divider"></div>
-                        @endif
-                    @elseif($notification->type === 'App\Notifications\NewSessionCreated')
-                        @php
-                            $sessionId = $notification->data['session_id'] ?? null; 
-                        @endphp
-                        @if($sessionId)
-                            <div class="dropdown-item d-flex align-items-center">
-                                <a href="{{ route('sessions.show', $sessionId) }}" class="flex-grow-1">
-                                    <div class="icon-circle bg-warning text-white mr-2">
-                                        <i class="fa fa-calendar"></i>
-                                    </div>
-                                    <div>
-                                        <div class="small text-gray-500">{{ $notification->created_at->diffForHumans() }}</div>
-                                        <span class="font-weight-bold">New Session: {{ $notification->data['session_name'] }}</span>
-                                        <div class="small text-muted">
-                                            Location: {{ $notification->data['location'] }}
-                                        </div>
-                                        <div class="small text-muted">
-                                            Date: {{ $notification->data['session_date'] }}
-                                        </div>
-                                    </div>
-                                </a>
-                                <form id="mark-as-read-{{ $notification->id }}" action="{{ route('notifications.markAsRead', $notification->id) }}" method="GET" style="display: inline;">
-                                    @csrf
-                                    <button type="submit" class="btn btn-primary btn-sm" title="Mark as read">
-                                        <i class="fa fa-check m-auto"></i>
-                                    </button>
-                                </form>
-                            </div>
-                            <div class="dropdown-divider"></div>
-                        @endif
-                    @elseif($notification->type === 'App\Notifications\NotesPublished')
-                        @php
-                            $sessionId = $notification->data['session_id'] ?? null;
-                        @endphp
-                        @if($sessionId)
-                            <div class="dropdown-item d-flex align-items-center">
-                                <a href="{{ route('notes.index', $sessionId) }}" class="flex-grow-1">
-                                    <div class="icon-circle bg-info text-white mr-2">
-                                        <i class="fa fa-book"></i>
-                                    </div>
-                                    <div>
-                                        <div class="small text-gray-500">{{ $notification->created_at->diffForHumans() }}</div>
-                                        <span class="font-weight-bold d-block">New Notes Published:</span>
-                                        <span class="font-weight-bold">Session: {{ $notification->data['session_name'] }}</span>
+                        @foreach(Auth::user()->unreadNotifications as $notification)
+                            @php
+                                $sessionId = $notification->data['session_id'] ?? null;
+                                $taskId = $notification->data['task_id'] ?? null;
+                            @endphp
 
-                                    </div>
-                                </a>
-                                <form id="mark-as-read-{{ $notification->id }}" action="{{ route('notifications.markAsRead', $notification->id) }}" method="GET" style="display: inline;">
-                                    @csrf
-                                    <button type="submit" class="btn btn-primary btn-sm m-3" title="Mark as read">
-                                        <i class="fa fa-check m-auto"></i>
-                                    </button>
-                                </form>
-                            </div>
-                            <div class="dropdown-divider"></div>
-                        @endif
+                            @if($notification->type === 'App\Notifications\TaskAddedNotification' && $sessionId && $taskId)
+                                <div class="dropdown-item d-flex align-items-center">
+                                    <a href="{{ route('sessions.tasks.show', ['session' => $sessionId, 'task' => $taskId]) }}" class="flex-grow-1">
+                                        <div class="icon-circle bg-info text-white mr-2">
+                                            <i class="fa fa-tasks"></i>
+                                        </div>
+                                        <div>
+                                            <div class="small text-gray-500">{{ $notification->created_at->diffForHumans() }}</div>
+                                            <span class="font-weight-bold">New Task: {{ $notification->data['task_name'] }}</span>
+                                            <div class="small text-muted">
+                                                Description: {{ $notification->data['task_description'] ?? 'No description available' }}
+                                            </div>
+                                            <div class="small text-muted">
+                                                Due Date: {{ $notification->data['task_due_date'] ?? 'No due date' }}
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <form id="mark-as-read-{{ $notification->id }}" action="{{ route('notifications.markAsRead', $notification->id) }}" method="GET" style="display: inline;">
+                                        @csrf
+                                        <button type="submit" class="btn btn-primary btn-sm" title="Mark as read">
+                                            <i class="fa fa-check m-auto"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                                <div class="dropdown-divider"></div>
+                            @elseif($notification->type === 'App\Notifications\NewSessionCreated' && $sessionId)
+                                <div class="dropdown-item d-flex align-items-center">
+                                    <a href="{{ route('sessions.show', $sessionId) }}" class="flex-grow-1">
+                                        <div class="icon-circle bg-warning text-white mr-2">
+                                            <i class="fa fa-calendar"></i>
+                                        </div>
+                                        <div>
+                                            <div class="small text-gray-500">{{ $notification->created_at->diffForHumans() }}</div>
+                                            <span class="font-weight-bold">New Session: {{ $notification->data['session_name'] }}</span>
+                                            <div class="small text-muted">
+                                                Location: {{ $notification->data['location'] }}
+                                            </div>
+                                            <div class="small text-muted">
+                                                Date: {{ $notification->data['session_date'] }}
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <form id="mark-as-read-{{ $notification->id }}" action="{{ route('notifications.markAsRead', $notification->id) }}" method="GET" style="display: inline;">
+                                        @csrf
+                                        <button type="submit" class="btn btn-primary btn-sm" title="Mark as read">
+                                            <i class="fa fa-check m-auto"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                                <div class="dropdown-divider"></div>
+                            @elseif($notification->type === 'App\Notifications\NotesPublished' && $sessionId)
+                                <div class="dropdown-item d-flex align-items-center">
+                                    <a href="{{ route('notes.index', $sessionId) }}" class="flex-grow-1">
+                                        <div class="icon-circle bg-info text-white mr-2">
+                                            <i class="fa fa-book"></i>
+                                        </div>
+                                        <div>
+                                            <div class="small text-gray-500">{{ $notification->created_at->diffForHumans() }}</div>
+                                            <span class="font-weight-bold d-block">New Notes Published:</span>
+                                            <span class="font-weight-bold">Session: {{ $notification->data['session_name'] }}</span>
+                                        </div>
+                                    </a>
+                                    <form id="mark-as-read-{{ $notification->id }}" action="{{ route('notifications.markAsRead', $notification->id) }}" method="GET" style="display: inline;">
+                                        @csrf
+                                        <button type="submit" class="btn btn-primary btn-sm m-3" title="Mark as read">
+                                            <i class="fa fa-check m-auto"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                                <div class="dropdown-divider"></div>
+                            @endif
+                        @endforeach
                     @endif
-                @endforeach
-                
-                @endif
 
                     <div class="dropdown-item text-center">
                         <a href="{{ route('notifications.markAllAsRead') }}">
@@ -157,15 +131,11 @@
                     </div>
                     <div class="dropdown-item text-center small text-gray-500">
                         <a href="{{ route('notifications.index') }}">View All Notifications</a>
->>>>>>> origin/master
                     </div>
                 </div>
+            </div>
 
-<<<<<<< HEAD
-            <!-- Messages Dropdown -->
-=======
             <!-- Message Notification Dropdown -->
->>>>>>> origin/master
             <div class="dropdown for-message">
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="message" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="fa fa-envelope"></i>
@@ -191,7 +161,7 @@
             </a>
 
             <div class="user-menu dropdown-menu">
-                <a class="nav-link" href={{ route('profile.edit') }}><i class="fa fa-user"></i> My Profile</a>
+                <a class="nav-link" href="{{ route('profile.edit') }}"><i class="fa fa-user"></i> My Profile</a>
 
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                     @csrf
@@ -204,43 +174,40 @@
         </div>
     </div>
 </div>
-<<<<<<< HEAD
 
-    <script>
-        // Fetch notifications and update the header
-        function fetchNotifications() {
-            $.ajax({
-                url: '{{ route('admin.notifications.fetch') }}',
-                method: 'GET',
-                success: function(data) {
-                    let notificationCount = data.length;
-                    $('#notification-count').text(notificationCount);
-                    $('#notification-count-text').text(notificationCount);
-                    let notificationList = $('#notification-list');
-                    notificationList.empty();
+<script>
+    // Fetch notifications and update the header
+    function fetchNotifications() {
+        $.ajax({
+            url: '{{ route('admin.notifications.fetch') }}',
+            method: 'GET',
+            success: function(data) {
+                let notificationCount = data.length;
+                $('#notification-count').text(notificationCount);
+                $('#notification-count-text').text(notificationCount);
+                let notificationList = $('#notification-list');
+                notificationList.empty();
 
-                    if (notificationCount === 0) {
-                        notificationList.append('<p>No new notifications.</p>');
-                    } else {
-                        data.forEach(function(notification) {
-                            notificationList.append(`
-                                <a class="dropdown-item media" href="{{ url('/admin/notifications/') }}/${notification.id}/read">
-                                    <i class="fa fa-check"></i>
-                                    <p>${notification.message}</p>
-                                </a>
-                            `);
-                        });
-                    }
+                if (notificationCount === 0) {
+                    notificationList.append('<p>No new notifications.</p>');
+                } else {
+                    data.forEach(function(notification) {
+                        notificationList.append(`
+                            <a class="dropdown-item media" href="{{ url('/admin/notifications/') }}/${notification.id}/read">
+                                <i class="fa fa-check"></i>
+                                <p>${notification.message}</p>
+                            </a>
+                        `);
+                    });
                 }
-            });
-        }
-
-        $(document).ready(function() {
-            fetchNotifications();
-
-            // Optional: Poll for new notifications every minute
-            setInterval(fetchNotifications, 60000); // Fetch every 60 seconds
+            }
         });
-    </script>
-=======
->>>>>>> origin/master
+    }
+
+    $(document).ready(function() {
+        fetchNotifications();
+
+        // Optional: Poll for new notifications every minute
+        setInterval(fetchNotifications, 60000); // Fetch every 60 seconds
+    });
+</script>
