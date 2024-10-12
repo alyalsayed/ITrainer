@@ -12,16 +12,7 @@
             <label for="name">Session Name</label>
             <input type="text" id="name" name="name" class="form-control" value="{{ $session->name }}" required>
         </div>
-        <div class="form-group">
-            <label for="track_id">Track</label>
-            <select id="track_id" name="track_id" class="form-control" required>
-                @foreach($tracks as $track)
-                    <option value="{{ $track->id }}" {{ $session->track_id == $track->id ? 'selected' : '' }}>
-                        {{ $track->name }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
+       
         <div class="form-group">
             <label for="session_date">Session Date</label>
             <input type="date" id="session_date" name="session_date" class="form-control" value="{{ $session->session_date->format('Y-m-d') }}" required>

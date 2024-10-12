@@ -11,6 +11,7 @@ class Track extends Model
 
     protected $fillable = ['name', 'description', 'start_date', 'end_date', 'instructor_id', 'hr_id']; // Added hr_id
 
+<<<<<<< HEAD
     protected $casts = [
         'start_date' => 'datetime',
         'end_date' => 'datetime',
@@ -30,5 +31,15 @@ class Track extends Model
     public function hr()
     {
         return $this->belongsTo(User::class, 'hr_id');
+=======
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'track_user', 'track_id', 'user_id')->withTimestamps();
+    }
+
+    public function sessions()
+    {
+        return $this->hasMany(TrackSession::class, 'track_id', 'id');
+>>>>>>> origin/master
     }
 }

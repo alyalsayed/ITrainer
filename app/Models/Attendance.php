@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Attendance extends Model
 {
     use HasFactory;
+<<<<<<< HEAD
     protected $table = 'attendance';
 
     protected $fillable = ['student_id', 'session_id', 'status'];
@@ -21,4 +22,20 @@ class Attendance extends Model
     {
         return $this->belongsTo(User::class, 'student_id'); // Assuming student_id is a user ID
     }
+=======
+
+    public $incrementing = false;
+    protected $table = 'attendance';
+    protected $fillable = [
+        'student_id',
+        'session_id',
+        'status',
+       
+    ];
+    public $timestamps = true;
+    
+
+
+
+>>>>>>> origin/master
 }

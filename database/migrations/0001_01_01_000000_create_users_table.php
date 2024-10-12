@@ -18,6 +18,8 @@ return new class extends Migration
             $table->enum('userType', ['admin', 'student', 'instructor', 'hr'])->default('student');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('profile_image')->nullable(); 
+            $table->timestamp('last_seen')->nullable();  
             $table->rememberToken();
             $table->timestamps();
         });

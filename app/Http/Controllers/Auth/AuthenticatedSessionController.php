@@ -33,6 +33,9 @@ class AuthenticatedSessionController extends Controller
         // Get the authenticated user
         $user = Auth::user();
 
+        // Flash notification to the session
+        session()->flash('login_success', 'Welcome back, ' . $user->name . '!');
+
         // Role-based redirection
         if ($user->userType === 'admin') {
             return redirect()->intended(route('admin.dashboard'));
