@@ -54,6 +54,8 @@ class RegisteredUserController extends Controller
             return redirect()->intended(route('instructor.dashboard'));
         } elseif ($user->userType === 'student') {
             return redirect()->intended(route('student.dashboard'));
+        }else{
+            return redirect()->intended(route('student.dashboard'));
         }
 
         // Default redirection if no specific role is matched
