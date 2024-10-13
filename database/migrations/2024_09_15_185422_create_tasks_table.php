@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->date('due_date');
             $table->unsignedBigInteger('session_id')->nullable();
-            $table->foreign('session_id')->references('id')->on('track_sessions');
+            $table->foreign('session_id')->references('id')->on('track_sessions')->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -25,7 +25,7 @@ class TaskController extends Controller
         // Retrieve all tasks for the session along with their submissions
         $session = TrackSession::findOrFail($sessionId);
         $tasks = $session->tasks()->with(['submissions'])->get();
-        return view('tasks.index', compact('tasks', 'sessionId'));
+        return view('tasks.index', compact('tasks', 'session', 'sessionId'));
     }
 
     /**

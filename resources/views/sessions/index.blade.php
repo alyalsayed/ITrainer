@@ -48,13 +48,13 @@
                                 </button>
                             </form>
 
-                             <!-- Attendance Icon -->
-                        <a href="{{ route('attendance.index', $session->id) }}" class="btn btn-secondary btn-sm m-1" title="Show Attendance">
-                            <i class="fa fa-check-square"></i>
-                        </a>
+                      
 
                         @endif
-
+       <!-- Attendance Icon -->
+       <a href="{{ route('attendance.index', $session->id) }}" class="btn btn-secondary btn-sm m-1" title="Show Attendance">
+        <i class="fa fa-check-square"></i>
+    </a>
                         <!-- Notes Icon -->
                         <a href="{{ route('notes.index', $session->id) }}" class="btn btn-primary btn-sm m-1" title="View Notes">
                             <i class="fa fa-sticky-note"></i>

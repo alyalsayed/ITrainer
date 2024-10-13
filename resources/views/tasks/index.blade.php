@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="container mt-4">
-    <h1 class="mb-4">Tasks List for Session {{ $sessionId }}</h1>
+    <h1 class="mb-4">Tasks List for Session : {{ $session->name }}</h1>
 
     {{-- Success Message --}}
     @if (session('success'))

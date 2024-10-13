@@ -29,7 +29,12 @@
             <li>
                 <a href="{{ route('sessions.index') }}"><i class="menu-icon fa fa-calendar"></i>Sessions</a>
             </li>
-            @endif
+            <li>
+                <a href="{{ route('notifications.index') }}"><i class="menu-icon fa fa-bell"></i>Notifications 
+                </a>
+            </li>
+        @endif
+        
 
             {{-- Admin-specific menu --}}
             @if(Auth::user()->userType === 'admin')

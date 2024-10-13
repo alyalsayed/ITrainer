@@ -15,7 +15,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id', true)->primary();
             $table->unsignedBigInteger('session_id');
             $table->string('title')->nullable();
-            $table->foreign('session_id')->references('id')->on('track_sessions');
+            $table->foreign('session_id')->references('id')->on('track_sessions')->onDelete('cascade');
             $table->enum('type', ['screenshot', 'code', 'text']);
             $table->text('content');
             $table->timestamps();
