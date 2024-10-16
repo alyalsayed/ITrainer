@@ -38,15 +38,8 @@
 
            {{-- Admin-specific menu --}}
 @if(Auth::user()->userType === 'admin')
-<li class="menu-item-has-children dropdown">
-    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <i class="menu-icon fa fa-shield"></i>Users
-    </a>
-    <ul class="sub-menu children dropdown-menu">
-        <li><i class="fa fa-user"></i><a href="#">Manage Users</a></li>
-        <li><i class="fa fa-tag"></i><a href="#">Manage Roles</a></li>
-    </ul>
-</li>
+<li><a href="{{ route('admin.users.index') }}"><i class="menu-icon fa fa-user"></i> Manage Users</a></li>
+
 <li class="menu-item-has-children dropdown">
     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <i class="menu-icon fa  fa-code-fork"></i>Tracks

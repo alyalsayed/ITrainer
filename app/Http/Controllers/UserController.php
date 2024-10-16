@@ -9,14 +9,28 @@ use App\Models\User;
 
 class UserController extends Controller
 {
-    /**
+     /**
      * Display a listing of the users.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::all(); // Retrieve all users
-        return view('admin.users.index', compact('users')); // Pass users to the view
+        $query = User::query();
+    
+        // Filter by user type
+        if ($request->filled('userType')) {
+            $query->where('userType', $request->input('userType'));
+        }
+    
+        // Search by name
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->input('search') . '%');
+        }
+    
+        $users = $query->paginate(10); // Show 10 users per page
+    
+        return view('admin.users.index', compact('users'));
     }
+    
 
     /**
      * Show the form for creating a new user.
@@ -27,7 +41,7 @@ class UserController extends Controller
     }
 
     /**
-     * Store a newly created or updated user in storage.
+     * Store a newly created user in storage.
      */
     public function store(Request $request)
     {
@@ -38,18 +52,15 @@ class UserController extends Controller
             'userType' => ['required', Rule::in(['admin', 'student', 'instructor', 'hr'])],
         ]);
 
-        // Prepare data for upsert
-        $data = [
+        // Create the user
+        User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
             'userType' => $validated['userType'],
-        ];
+        ]);
 
-        // Upsert the user
-        User::upsert([$data], ['email'], ['name', 'userType', 'password']);
-
-        return redirect()->route('admin.users.index')->with('success', 'User created or updated successfully.');
+        return redirect()->route('admin.users.index')->with('success', 'User created successfully.');
     }
 
     /**
@@ -84,7 +95,7 @@ class UserController extends Controller
             'userType' => ['required', Rule::in(['admin', 'student', 'instructor', 'hr'])],
         ]);
 
-        // Prepare data for upsert
+        // Prepare data for updating
         $data = [
             'name' => $validated['name'],
             'email' => $validated['email'],
@@ -96,8 +107,8 @@ class UserController extends Controller
             $data['password'] = Hash::make($validated['password']);
         }
 
-        // Upsert the user
-        User::upsert([$data], ['email'], ['name', 'userType', 'password']);
+        // Update the user
+        $user->update($data);
 
         return redirect()->route('admin.users.index')->with('success', 'User updated successfully.');
     }
