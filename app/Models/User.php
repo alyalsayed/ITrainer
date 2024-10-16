@@ -67,4 +67,19 @@ class User extends Authenticatable
     {
         return $this->hasMany(Message::class, 'receiver_id');
     }
+     /**
+     * Get the attendances for the user.
+     */
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class, 'student_id');
+    }
+
+    /**
+     * Get the task submissions for the user.
+     */
+    public function taskSubmissions()
+    {
+        return $this->hasMany(TaskSubmission::class, 'student_id');
+    }
 }

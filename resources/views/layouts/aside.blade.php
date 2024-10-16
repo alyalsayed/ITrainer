@@ -36,18 +36,28 @@
         @endif
         
 
-            {{-- Admin-specific menu --}}
-            @if(Auth::user()->userType === 'admin')
-            <li class="menu-item-has-children dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="menu-icon fa fa-users"></i>Admin Menu
-                </a>
-                <ul class="sub-menu children dropdown-menu">
-                    <li><i class="fa fa-user-cog"></i><a href="#">Manage Users</a></li>
-                    <li><i class="fa fa-cogs"></i><a href="#">Settings</a></li>
-                </ul>
-            </li>
-            @endif
+           {{-- Admin-specific menu --}}
+@if(Auth::user()->userType === 'admin')
+<li class="menu-item-has-children dropdown">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i class="menu-icon fa fa-shield"></i>Users
+    </a>
+    <ul class="sub-menu children dropdown-menu">
+        <li><i class="fa fa-user"></i><a href="#">Manage Users</a></li>
+        <li><i class="fa fa-tag"></i><a href="#">Manage Roles</a></li>
+    </ul>
+</li>
+<li class="menu-item-has-children dropdown">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i class="menu-icon fa  fa-code-fork"></i>Tracks
+    </a>
+    <ul class="sub-menu children dropdown-menu">
+        <li><i class="fa fa-pencil-square-o"></i><a href="#">Manage Tracks</a></li>
+        <li><i class="fa fa-tasks"></i><a href="#">Assign Tracks</a></li>
+    </ul>
+</li>
+@endif
+
 
         </ul>
     </div>

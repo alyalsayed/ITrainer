@@ -11,20 +11,20 @@ use App\Models\Track;
 use App\Models\Attendance;
 use App\Models\SessionNote;
 use Illuminate\Support\Facades\DB;
-
+use App\Models\User;
 class DashboardController extends Controller
 {
     public function index()
     {
         // Get all tracks associated with the instructor
         $tracks = Auth::user()->tracks()->pluck('id');
-        
+
         // Get sessions associated with those tracks
         $sessions = TrackSession::whereIn('track_id', $tracks)->get();
-        
+
         // Get tasks associated with those sessions
         $tasks = Task::whereIn('session_id', $sessions->pluck('id'))->get();
-        
+
         // Get the number of students in each track
         $studentCount = DB::table('track_user')
             ->join('users', 'track_user.user_id', '=', 'users.id')
@@ -33,60 +33,82 @@ class DashboardController extends Controller
             ->select(DB::raw('track_id, COUNT(track_user.user_id) as student_count'))
             ->groupBy('track_id')
             ->get();
-    
+
         // Get attendance records for sessions
         $attendanceRecords = Attendance::whereIn('session_id', $sessions->pluck('id'))
-            ->select('session_id', 
-                DB::raw('COUNT(CASE WHEN status = "present" THEN 1 END) as present_count'), 
-                DB::raw('COUNT(*) as total_count'))
-            ->groupBy('session_id')
+            ->select('session_id', 'student_id', 'status')
             ->get();
-        
-        // Get total notes count
-        $notesCount = SessionNote::count(); 
-    
-        // Calculate the attendance rate
-        $totalAttendance = $attendanceRecords->sum('total_count');
-        $presentAttendance = $attendanceRecords->sum('present_count');
+
+        // Get total notes count related to the instructor's sessions
+        $notesCount = SessionNote::whereIn('session_id', $sessions->pluck('id'))->count();
+
+        // Calculate the total attendance rate (this is already working correctly)
+        $totalAttendance = $attendanceRecords->count();
+        $presentAttendance = $attendanceRecords->where('status', 'present')->count();
         $attendanceRate = $totalAttendance > 0 ? round(($presentAttendance / $totalAttendance) * 100, 2) : 0;
-    
+
         // Prepare attendance data for plotting
-        $attendanceData = $attendanceRecords->map(function($record) use ($sessions) {
-            $session = $sessions->firstWhere('id', $record->session_id);
-            $attendanceRate = $record->total_count > 0 ? round(($record->present_count / $record->total_count) * 100, 2) : 0;
+        $attendanceData = $sessions->map(function ($session) use ($attendanceRecords) {
+            $attendanceForSession = $attendanceRecords->where('session_id', $session->id);
+            $totalStudents = DB::table('track_user')->where('track_id', $session->track_id)->count();
+            $presentCount = $attendanceForSession->where('status', 'present')->count();
+            $attendanceRate = $totalStudents > 0 ? round(($presentCount / $totalStudents) * 100, 2) : 0;
+
             return [
                 'session_name' => optional($session)->session_date->format('Y-m-d'),
                 'attendance_rate' => $attendanceRate,
             ];
         })->values()->toArray();
-    
-        // Calculate submission rate for each session considering multiple tasks
-        $totalSubmissionRate = 0;
-        foreach ($sessions as $session) {
-            $totalStudents = $studentCount->where('track_id', $session->track_id)->sum('student_count');
-            $tasksForSession = $tasks->where('session_id', $session->id);
 
-            // Total possible submissions = total tasks * total students
-            $totalPossibleSubmissions = $tasksForSession->count() * $totalStudents;
-            
-            // Count how many submissions were made for all tasks in this session
-            $submittedCount = DB::table('task_submissions')
-                ->join('tasks', 'task_submissions.task_id', '=', 'tasks.id')
-                ->where('tasks.session_id', $session->id)
-                ->count('task_submissions.id'); // Count all submissions
-            
-            // Calculate submission rate based on total possible submissions
-            $submissionRate = $totalPossibleSubmissions > 0 ? round(($submittedCount / $totalPossibleSubmissions) * 100, 2) : 0;
-    
-            $totalSubmissionRate += $submissionRate;
-        }
+        // Get only students associated with the instructor's tracks
+        $students = User::where('userType', 'student')
+            ->whereIn('id', function ($query) use ($tracks) {
+                $query->select('user_id')
+                    ->from('track_user')
+                    ->whereIn('track_id', $tracks);
+            })
+            ->with(['attendances', 'taskSubmissions'])
+            ->get();
 
-        // Calculate average submission rate across all sessions
-        $averageSubmissionRate = count($sessions) > 0 ? round($totalSubmissionRate / count($sessions), 2) : 0;
+        // Correctly calculate attendance rate and submission rate for each student
+        $studentDetails = $students->map(function ($student) use ($sessions) {
+            // Total number of sessions the student should attend
+            $totalSessions = $sessions->count();
+
+            // Number of sessions where the student was present
+            $presentCount = $student->attendances->whereIn('session_id', $sessions->pluck('id'))->where('status', 'present')->count();
+
+            // Calculate attendance rate for the student
+            $attendanceRate = $totalSessions > 0 ? round(($presentCount / $totalSessions) * 100, 2) : 0;
+
+            // Calculate submission rate for the student
+            $totalTasks = Task::whereIn('session_id', $sessions->pluck('id'))->count();
+            $submissionCount = $student->taskSubmissions->count();
+            $submissionRate = $totalTasks > 0 ? round(($submissionCount / $totalTasks) * 100, 2) : 0;
+
+            return [
+                'name' => $student->name,
+                'email' => $student->email,
+                'attendance_rate' => $attendanceRate,
+                'submission_rate' => $submissionRate,
+            ];
+        });
+
+        // Calculate the average attendance rate across all students
+        $averageAttendanceRate = $studentDetails->avg('attendance_rate');
+        $averageSubmissionRate = $studentDetails->avg('submission_rate');
 
         return view('instructor.dashboard', compact(
-            'sessions', 'tasks', 'studentCount', 'attendanceRecords', 'notesCount', 
-            'attendanceRate', 'attendanceData', 'averageSubmissionRate' // Pass average submission rate to the view
+            'sessions',
+            'tasks',
+            'studentCount',
+            'attendanceRecords',
+            'notesCount',
+            'attendanceRate',
+            'attendanceData',
+            'averageAttendanceRate', // Add this to your view
+            'averageSubmissionRate', // Fix the undefined variable issue
+            'studentDetails'
         ));
     }
 }

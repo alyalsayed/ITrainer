@@ -16,37 +16,37 @@ class DatabaseSeeder extends Seeder
         // Seed Users
         DB::table('users')->insert([
             [
-                'name' => 'Student User',
-                'email' => 'student@gmail.com',
+                'name' => 'mark zadworski', 
+                'email' => 'alyalsayed56@yahoo.com',
                 'password' => Hash::make('password123'),
                 'userType' => 'student',
             ],
             [
-                'name' => 'Student User',
-                'email' => 'std1@gmail.com',
+                'name' => 'daba zadeh',
+                'email' => 'aliaboali541@gmail.com',
                 'password' => Hash::make('password123'),
                 'userType' => 'student',
             ],
             [
-                'name' => 'Student User',
+                'name' => 'john doe',
                 'email' => 'std2@gmail.com',
                 'password' => Hash::make('password123'),
                 'userType' => 'student',
             ],
             [
-                'name' => 'Student User',
+                'name' => 'david jones',
                 'email' => 'std3@gmail.com',
                 'password' => Hash::make('password123'),
                 'userType' => 'student',
             ],
             [
-                'name' => 'Student User',
+                'name' => 'jane harris',
                 'email' => 'std4@gmail.com',
                 'password' => Hash::make('password123'),
                 'userType' => 'student',
             ],
             [
-                'name' => 'Student User',
+                'name' => 'arthur arnold',
                 'email' => 'std5@gmail.com',
                 'password' => Hash::make('password123'),
                 'userType' => 'student',

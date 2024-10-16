@@ -131,6 +131,39 @@
     </div>
     <!-- /.content -->
     <div class="clearfix"></div>
+    <!-- Student Attendance and Submission Rate Table -->
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <strong class="card-title">Student Attendance and Submission Rates</strong>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Attendance Rate (%)</th>
+                            <th>Submission Rate (%)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($studentDetails as $student)
+                        <tr>
+                            <td>{{ $student['name'] }}</td>
+                            <td>{{ $student['email'] }}</td>
+                            <td>{{ $student['attendance_rate'] }}%</td>
+                            <td>{{ $student['submission_rate'] }}%</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div class="clearfix"></div>
 
     
     <script>
