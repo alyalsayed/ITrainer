@@ -14,15 +14,13 @@ use App\Http\Controllers\SessionNoteController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\NotificationController;
 use App\Livewire\TodoList;
+use App\Http\Controllers\UserController;
 
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-// Route::get('/chat', function () {
-//     broadcast(new MessageSent());
-// });
 
 Route::middleware(['auth', 'update.last.seen'])->group(function () {
     Route::get('/chat/{receiver_id?}', [ChatController::class, 'index'])->name('chat.index');
@@ -54,6 +52,17 @@ Route::middleware('auth')->group(function () {
 // Admin routes
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+
+    // User Management Routes
+    Route::prefix('admin/users')->name('admin.users.')->group(function () {
+        Route::get('/', [UserController::class, 'index'])->name('index');
+        Route::get('/create', [UserController::class, 'create'])->name('create');
+        Route::post('/', [UserController::class, 'store'])->name('store');
+        Route::get('/{id}', [UserController::class, 'show'])->name('show');
+        Route::get('/{id}/edit', [UserController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [UserController::class, 'update'])->name('update');
+        Route::delete('/{id}', [UserController::class, 'destroy'])->name('destroy');
+    });
 });
 
 // Instructor routes 
