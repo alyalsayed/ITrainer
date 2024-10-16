@@ -15,6 +15,7 @@ use App\Http\Controllers\ChatController;
 use App\Http\Controllers\NotificationController;
 use App\Livewire\TodoList;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\TrackController;
 
 
 Route::get('/', function () {
@@ -63,6 +64,21 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::put('/{id}', [UserController::class, 'update'])->name('update');
         Route::delete('/{id}', [UserController::class, 'destroy'])->name('destroy');
     });
+
+    // Track Management Routes
+    Route::prefix('admin/tracks')->name('admin.tracks.')->group(function () {
+        Route::get('/', [TrackController::class, 'index'])->name('index');
+        Route::get('/create', [TrackController::class, 'create'])->name('create');
+        Route::post('/', [TrackController::class, 'store'])->name('store');
+        Route::get('/{id}/edit', [TrackController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [TrackController::class, 'update'])->name('update');
+        Route::delete('/{id}', [TrackController::class, 'destroy'])->name('destroy');
+
+        // Route to assign users to tracks
+        Route::get('/{id}/assign', [TrackController::class, 'assignUsersForm'])->name('assign');
+        Route::post('/{id}/assign', [TrackController::class, 'assignUsers'])->name('assign.users');
+});
+
 });
 
 // Instructor routes 
