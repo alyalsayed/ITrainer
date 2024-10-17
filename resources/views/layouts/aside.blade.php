@@ -40,15 +40,8 @@
 @if(Auth::user()->userType === 'admin')
 <li><a href="{{ route('admin.users.index') }}"><i class="menu-icon fa fa-user"></i> Manage Users</a></li>
 
-<li class="menu-item-has-children dropdown">
-    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <i class="menu-icon fa  fa-code-fork"></i>Tracks
-    </a>
-    <ul class="sub-menu children dropdown-menu">
-        <li><i class="fa fa-pencil-square-o"></i><a href="{{ route('admin.tracks.index') }}">Manage Tracks</a></li>
-        <li><i class="fa fa-tasks"></i><a href="#">Assign Tracks</a></li>
-    </ul>
-</li>
+<li><i class="menu-icon fa fa-pencil-square-o"></i><a href="{{ route('admin.tracks.index') }}">Manage Tracks</a></li>
+
 @endif
 
 
