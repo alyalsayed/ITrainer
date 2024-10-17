@@ -40,7 +40,7 @@
 @if(Auth::user()->userType === 'admin')
 <li><a href="{{ route('admin.users.index') }}"><i class="menu-icon fa fa-user"></i> Manage Users</a></li>
 
-<li><i class="menu-icon fa fa-pencil-square-o"></i><a href="{{ route('admin.tracks.index') }}">Manage Tracks</a></li>
+<li><a href="{{ route('admin.tracks.index') }}"><i class="menu-icon fa fa-pencil-square-o"></i> Manage Tracks</a></li>
 
 @endif
 
