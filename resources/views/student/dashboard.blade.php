@@ -94,7 +94,7 @@
 
     <h3 class="my-4">Upcoming Sessions</h3>
     <div class="row">
-        @foreach ($sessions as $session)
+        @foreach ($sessions->filter(fn($session) => \Carbon\Carbon::parse($session->session_date)->isToday() || \Carbon\Carbon::parse($session->session_date)->isFuture()) as $session)
         <div class="col-md-4">
             <div class="card">
                 <div class="card-header">
@@ -113,7 +113,7 @@
 
     <h3 class="my-4">Upcoming Tasks</h3>
     <div class="row">
-        @foreach ($tasks as $task)
+        @foreach ($tasks->filter(fn($task) => \Carbon\Carbon::parse($task->due_date)->isToday() || \Carbon\Carbon::parse($task->due_date)->isFuture()) as $task)
         <div class="col-md-4">
             <div class="card">
                 <div class="card-header">
