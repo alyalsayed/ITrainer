@@ -45,7 +45,7 @@
         <i class="menu-icon fa  fa-code-fork"></i>Tracks
     </a>
     <ul class="sub-menu children dropdown-menu">
-        <li><i class="fa fa-pencil-square-o"></i><a href="#">Manage Tracks</a></li>
+        <li><i class="fa fa-pencil-square-o"></i><a href="{{ route('admin.tracks.index') }}">Manage Tracks</a></li>
         <li><i class="fa fa-tasks"></i><a href="#">Assign Tracks</a></li>
     </ul>
 </li>

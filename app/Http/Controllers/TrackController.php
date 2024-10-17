@@ -70,26 +70,44 @@ class TrackController extends Controller
         return redirect()->route('admin.tracks.index')->with('success', 'Track deleted successfully.');
     }
 
-    // Show the form to assign users to a track
-    public function assignUsersForm($id)
+    // Assign users to a track form with pagination and search
+    // Assign users to a track form with pagination and search
+
+    // Assign users to a track form with search and pagination
+    public function assignUsersForm($id, Request $request)
     {
         $track = Track::findOrFail($id);
-        $users = User::all(); // You can filter this if needed
 
-        return view('admin.tracks.assign', compact('track', 'users'));
+        // Search functionality
+        $query = User::query();
+        if ($request->filled('search')) {
+            $query->where('email', 'like', '%' . $request->input('search') . '%');
+        }
+
+        // Paginate results, 10 per page
+        $users = $query->paginate(10);
+
+        // Get already assigned users
+        $assignedUsers = $track->users()->pluck('id')->toArray();
+
+        return view('admin.tracks.assign', compact('track', 'users', 'assignedUsers'));
     }
 
-    // Assign users to a track
+    // Handle the user assignment/unassignment to a track
     public function assignUsers(Request $request, $id)
     {
         $track = Track::findOrFail($id);
-        $validated = $request->validate([
-            'users' => 'required|array',
-        ]);
+        $userId = $request->input('user_id');
 
-        // Sync users to the track (attach or replace)
-        $track->users()->sync($validated['users']);
-
-        return redirect()->route('admin.tracks.index')->with('success', 'Users assigned to track successfully.');
+        // Check if the user is already assigned
+        if ($track->users()->where('user_id', $userId)->exists()) {
+            // Unassign the user if already assigned
+            $track->users()->detach($userId);
+            return response()->json(['status' => 'unassigned']);
+        } else {
+            // Assign the user if not assigned
+            $track->users()->attach($userId);
+            return response()->json(['status' => 'assigned']);
+        }
     }
 }

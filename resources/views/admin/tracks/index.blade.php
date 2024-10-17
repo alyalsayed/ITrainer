@@ -3,7 +3,15 @@
 @section('content')
 
 <div class="container">
-    <h1>All Tracks</h1>
+    <h1 class="mb-4">All Tracks</h1>
+
+    <!-- Success Message -->
+    @if (session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
 
     <a href="{{ route('admin.tracks.create') }}" class="btn btn-primary mb-3">Create New Track</a>
 
@@ -26,7 +34,7 @@
                     <td>{{ $track->end_date }}</td>
                     <td>
                         <a href="{{ route('admin.tracks.edit', $track->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                        <a href="{{ route('admin.tracks.assign', $track->id) }}" class="btn btn-info btn-sm">Assign Users</a>
+                        <a href="{{ route('admin.tracks.assign', $track->id) }}" class="btn btn-info btn-sm my-2 ">Assign Users</a>
                         <form action="{{ route('admin.tracks.destroy', $track->id) }}" method="POST" style="display:inline;">
                             @csrf
                             @method('DELETE')

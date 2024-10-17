@@ -47,7 +47,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('notifications', [NotificationController::class, 'destroyAll'])->name('notifications.destroyAll');
 
     Route::get('/todo', TodoList::class)->name('todo.index');
-
 });
 
 // Admin routes
@@ -74,12 +73,15 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::put('/{id}', [TrackController::class, 'update'])->name('update');
         Route::delete('/{id}', [TrackController::class, 'destroy'])->name('destroy');
 
-        // Route to assign users to tracks
+        // Route to assign users to tracks using buttons
         Route::get('/{id}/assign', [TrackController::class, 'assignUsersForm'])->name('assign');
         Route::post('/{id}/assign', [TrackController::class, 'assignUsers'])->name('assign.users');
+    });
 });
 
-});
+
+
+
 
 // Instructor routes 
 Route::middleware(['auth', 'role:instructor'])->group(function () {
@@ -115,8 +117,6 @@ Route::middleware(['auth', 'role:instructor'])->group(function () {
     Route::put('sessions/{sessionId}/notes/{id}', [SessionNoteController::class, 'update'])->name('notes.update'); // Update existing note for a session
     Route::delete('sessions/{sessionId}/notes/{id}', [SessionNoteController::class, 'destroy'])->name('notes.destroy'); // Delete note for a session
     Route::post('/sessions/{sessionId}/notes/publish', [SessionNoteController::class, 'publish'])->name('notes.publish');
-
-
 });
 
 // Shared routes for both students and instructors
