@@ -29,9 +29,9 @@ Route::middleware(['auth', 'update.last.seen'])->group(function () {
     Route::get('/fetch-messages', [ChatController::class, 'fetchMessages'])->name('chat.fetch');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Route::get('/dashboard', function () {
+//     return view('dashboard');
+// })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     // Profile

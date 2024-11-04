@@ -21,7 +21,6 @@ class CheckRole
      */
     public function handle(Request $request, Closure $next,   ...$roles): Response
     {
-       
         if (in_array(Auth::user()->userType, $roles)) {
             return $next($request);
         }
