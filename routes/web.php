@@ -19,9 +19,12 @@ use App\Http\Controllers\TrackController;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use App\Http\Controllers\Auth\SocialiteController;
 
+// Google Login Routes
 Route::get('auth/google/redirect', [SocialiteController::class, 'redirectToGoogle'])->name('google.redirect');
 Route::get('auth/google/callback', [SocialiteController::class, 'handleGoogleCallback'])->name('google.callback');
-
+// Facebook Login Routes
+Route::get('auth/facebook', [SocialiteController::class, 'redirectToFacebook'])->name('facebook.redirect');;
+Route::get('auth/facebook/callback', [SocialiteController::class, 'handleFacebookCallback'])->name('google.callback');;
 
 
 Route::get('/', function () {

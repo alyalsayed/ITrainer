@@ -71,6 +71,13 @@
                             <i class="fa fa-google"></i> Login with Google
                         </a>
                     </div>
+                    
+                      <!-- Facebook Login Button -->
+                      <div class="social-login text-center mt-3">
+                        <a href="{{ route('facebook.redirect') }}" class="btn btn-primary btn-flat">
+                            <i class="fa fa-facebook"></i> Login with Facebook
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
