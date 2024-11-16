@@ -10,7 +10,7 @@
                     <h3 class="mb-0 fw-r">
                         <span class="count">{{ $tasks->count() }}</span>
                     </h3>
-                    <p class="text-light mt-1 m-0">Total Tasks</p>
+                    <p class="text-light mt-1 m-0">{{trans('main_translation.Total_Tasks')}}</p>
                 </div>
                 <div class="card-right text-right">
                     <i class="icon fade-5 icon-lg pe-7s-notebook"></i>
@@ -27,7 +27,7 @@
                     <h3 class="mb-0 fw-r">
                         <span class="count">{{ $studentCount->sum('student_count') }}</span>
                     </h3>
-                    <p class="text-light mt-1 m-0">Total Students</p>
+                    <p class="text-light mt-1 m-0">{{trans('main_translation.Total_Students')}}</p>
                 </div>
                 <div class="card-right text-right">
                     <i class="icon fade-5 icon-lg pe-7s-users"></i>
@@ -44,7 +44,7 @@
                     <h3 class="mb-0 fw-r">
                         <span class="count">{{ $sessions->count() }}</span>
                     </h3>
-                    <p class="text-light mt-1 m-0">Total Sessions</p>
+                    <p class="text-light mt-1 m-0">{{trans('main_translation.Total_Sessions')}}</p>
                 </div>
                 <div class="card-right text-right">
                     <i class="icon fade-5 icon-lg pe-7s-date"></i>
@@ -63,7 +63,7 @@
                     <h3 class="mb-0 fw-r">
                         <span class="count">{{ $attendanceRate }}</span><span>%</span>
                     </h3>
-                    <p class="text-light mt-1 m-0">Attendance Rate</p>
+                    <p class="text-light mt-1 m-0">{{ trans('main_translation.Attendance_Rate')}}</p>
                 </div>
                 <div class="card-right text-right">
                     <i class="icon fade-5 icon-lg pe-7s-check"></i>
@@ -80,7 +80,7 @@
                     <h3 class="mb-0 fw-r">
                         <span class="count">{{ $averageSubmissionRate }}</span><span>%</span>
                     </h3>
-                    <p class="text-light mt-1 m-0">Avg Submission Rate</p>
+                    <p class="text-light mt-1 m-0">{{ trans('main_translation.Avg_Submission_Rate')}}</p>
                 </div>
                 <div class="card-right text-right">
                     <i class="icon fade-5 icon-lg pe-7s-pen"></i>
@@ -97,7 +97,7 @@
                     <h3 class="mb-0 fw-r">
                         <span class="count">{{ $notesCount }}</span>
                     </h3>
-                    <p class="text-light mt-1 m-0">Total Notes</p>
+                    <p class="text-light mt-1 m-0">{{ trans('main_translation.Total_Notes')}}</p>
                 </div>
                 <div class="card-right text-right">
                     <i class="icon fade-5 icon-lg pe-7s-note2"></i>
@@ -117,7 +117,7 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="mb-3">Attendance Chart</h4>
+                            <h4 class="mb-3 text-center">{{ trans('main_translation.Attendance_Chart') }}</h4>
                             <div class="flot-container">
                                 <div id="flotBar" style="width:100%;height:275px;"></div>
                             </div>
@@ -138,13 +138,13 @@
                 <strong class="card-title">Student Attendance and Submission Rates</strong>
             </div>
             <div class="card-body">
-                <table class="table table-bordered">
+                <table class="table table-bordered" {{ LaravelLocalization::getCurrentLocale() == 'ar' ? 'dir=rtl' : '' }}>
                     <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Attendance Rate (%)</th>
-                            <th>Submission Rate (%)</th>
+                            <th>{{ trans('main_translation.Name')}}</th>
+                            <th>{{ trans('main_translation.Email')}}</th>
+                            <th>{{ trans('main_translation.Attendance_Rate')}} (%)</th>
+                            <th>{{ trans('main_translation.Submission_Rate')}} (%)</th>
                         </tr>
                     </thead>
                     <tbody>

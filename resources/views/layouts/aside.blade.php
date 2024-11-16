@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-sm navbar-default mt-3">
+<nav class="navbar navbar-expand-sm navbar-default mt-3" >
     <div id="main-menu" class="main-menu collapse navbar-collapse">
         <ul class="nav navbar-nav">
 
@@ -12,25 +12,25 @@
 
             {{-- Dashboard link --}}
             <li>
-                <a href="{{ $dashboardRoute }}"><i class="menu-icon fa fa-laptop"></i>Dashboard</a>
+                <a href="{{ $dashboardRoute }}"><i class="menu-icon fa fa-laptop"></i>{{trans('main_translation.Dashboard')}}</a>
             </li>
 
             <li>
-                <a href="{{ route('chat.index') }}"><i class="menu-icon fa fa-comments"></i>Chat</a>
+                <a href="{{ route('chat.index') }}"><i class="menu-icon fa fa-comments"></i>{{trans('main_translation.Chat')}}</a>
             </li>
 
             {{-- To Do List link --}}
             <li>
-                <a href="{{ route('todo.index') }}"><i class="menu-icon fa fa-list"></i>To Do</a>
+                <a href="{{ route('todo.index') }}"><i class="menu-icon fa fa-list"></i>{{trans('main_translation.ToDoList')}}</a>
             </li>
 
             {{-- Instructor-specific menu --}}
             @if(Auth::user()->userType === 'instructor' || Auth::user()->userType === 'student')
             <li>
-                <a href="{{ route('sessions.index') }}"><i class="menu-icon fa fa-calendar"></i>Sessions</a>
+                <a href="{{ route('sessions.index') }}"><i class="menu-icon fa fa-calendar"></i>{{trans('main_translation.Sessions')}}</a>
             </li>
             <li>
-                <a href="{{ route('notifications.index') }}"><i class="menu-icon fa fa-bell"></i>Notifications 
+                <a href="{{ route('notifications.index') }}"><i class="menu-icon fa fa-bell"></i>{{trans('main_translation.Notifications')}}</a> 
                 </a>
             </li>
         @endif
