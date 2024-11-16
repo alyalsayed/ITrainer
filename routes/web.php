@@ -16,6 +16,12 @@ use App\Http\Controllers\NotificationController;
 use App\Livewire\TodoList;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TrackController;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+use App\Http\Controllers\Auth\SocialiteController;
+
+Route::get('auth/google/redirect', [SocialiteController::class, 'redirectToGoogle'])->name('google.redirect');
+Route::get('auth/google/callback', [SocialiteController::class, 'handleGoogleCallback'])->name('google.callback');
+
 
 
 Route::get('/', function () {
@@ -29,118 +35,124 @@ Route::middleware(['auth', 'update.last.seen'])->group(function () {
     Route::get('/fetch-messages', [ChatController::class, 'fetchMessages'])->name('chat.fetch');
 });
 
-// Route::get('/dashboard', function () {
-//     return view('dashboard');
-// })->middleware(['auth', 'verified'])->name('dashboard');
-
-Route::middleware('auth')->group(function () {
-    // Profile
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
-    // Notifications
-    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
-    Route::get('/notifications/{id}/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
-    Route::get('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllAsRead');
-    Route::delete('notifications/{id}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
-    Route::delete('notifications', [NotificationController::class, 'destroyAll'])->name('notifications.destroyAll');
-
-    Route::get('/todo', TodoList::class)->name('todo.index');
-});
-
-// Admin routes
-Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
-
-    // User Management Routes
-    Route::prefix('admin/users')->name('admin.users.')->group(function () {
-        Route::get('/', [UserController::class, 'index'])->name('index');
-        Route::get('/create', [UserController::class, 'create'])->name('create');
-        Route::post('/', [UserController::class, 'store'])->name('store');
-        Route::get('/{id}', [UserController::class, 'show'])->name('show');
-        Route::get('/{id}/edit', [UserController::class, 'edit'])->name('edit');
-        Route::put('/{id}', [UserController::class, 'update'])->name('update');
-        Route::delete('/{id}', [UserController::class, 'destroy'])->name('destroy');
-    });
-
-    // Track Management Routes
-    Route::prefix('admin/tracks')->name('admin.tracks.')->group(function () {
-        Route::get('/', [TrackController::class, 'index'])->name('index');
-        Route::get('/create', [TrackController::class, 'create'])->name('create');
-        Route::post('/', [TrackController::class, 'store'])->name('store');
-        Route::get('/{id}/edit', [TrackController::class, 'edit'])->name('edit');
-        Route::put('/{id}', [TrackController::class, 'update'])->name('update');
-        Route::delete('/{id}', [TrackController::class, 'destroy'])->name('destroy');
-
-        // Route to assign users to tracks using buttons
-        Route::get('/{id}/assign', [TrackController::class, 'assignUsersForm'])->name('assign');
-        Route::post('/{id}/assign', [TrackController::class, 'assignUsers'])->name('assign.users');
-    });
-});
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
 
 
 
 
-// Instructor routes 
-Route::middleware(['auth', 'role:instructor'])->group(function () {
+Route::group(
+    [
+        'prefix' => LaravelLocalization::setLocale(),
+        'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath']
+    ],
+    function () {
 
-    Route::get('/instructor/dashboard', [InstructorDashboardController::class, 'index'])->name('instructor.dashboard');
+        Route::middleware('auth')->group(function () {
+            // Profile
+            Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+            Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+            Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Session Routes
-    Route::resource('sessions', SessionController::class); // Includes all CRUD operations
+            // Notifications
+            Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+            Route::get('/notifications/{id}/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
+            Route::get('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllAsRead');
+            Route::delete('notifications/{id}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
+            Route::delete('notifications', [NotificationController::class, 'destroyAll'])->name('notifications.destroyAll');
 
-    // Task Routes
-    // Route::resource('tasks', TaskController::class);
-
-    Route::get('sessions/{session}/tasks', [TaskController::class, 'index'])->name('sessions.tasks.index');
-    Route::get('sessions/{session}/tasks/create', [TaskController::class, 'create'])->name('sessions.tasks.create');
-    Route::post('sessions/{session}/tasks', [TaskController::class, 'store'])->name('sessions.tasks.store');
-    Route::get('sessions/{session}/tasks/{task}', [TaskController::class, 'show'])->name('sessions.tasks.show');
-    Route::get('sessions/{session}/tasks/{task}/edit', [TaskController::class, 'edit'])->name('sessions.tasks.edit');
-    Route::put('sessions/{session}/tasks/{task}', [TaskController::class, 'update'])->name('sessions.tasks.update');
-    Route::delete('sessions/{session}/tasks/{task}', [TaskController::class, 'destroy'])->name('sessions.tasks.destroy');
-    Route::get('sessions/{sessionId}/tasks/{taskId}/submissions/{submissionId}/grade', [TaskController::class, 'showGradeForm'])
-        ->name('sessions.tasks.grade.form');
-
-    // Route to handle the grading submission
-    Route::post('sessions/{sessionId}/tasks/{taskId}/submissions/{submissionId}/grade', [TaskController::class, 'grade'])
-        ->name('sessions.tasks.grade');
+            Route::get('/todo', TodoList::class)->name('todo.index');
+        });
 
 
-    // Attendance Routes
-    Route::post('attendance/{sessionId}', [AttendanceController::class, 'storeAttendance'])->name('attendance.store');
+        // Admin routes
+        Route::middleware(['auth', 'role:admin'])->group(function () {
+            Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 
-    // Session Note Routes
-    Route::post('sessions/{sessionId}/notes', [SessionNoteController::class, 'store'])->name('notes.store'); // Store new note for a session
-    Route::put('sessions/{sessionId}/notes/{id}', [SessionNoteController::class, 'update'])->name('notes.update'); // Update existing note for a session
-    Route::delete('sessions/{sessionId}/notes/{id}', [SessionNoteController::class, 'destroy'])->name('notes.destroy'); // Delete note for a session
-    Route::post('/sessions/{sessionId}/notes/publish', [SessionNoteController::class, 'publish'])->name('notes.publish');
-});
+            // User Management Routes
+            Route::prefix('admin/users')->name('admin.users.')->group(function () {
+                Route::get('/', [UserController::class, 'index'])->name('index');
+                Route::get('/create', [UserController::class, 'create'])->name('create');
+                Route::post('/', [UserController::class, 'store'])->name('store');
+                Route::get('/{id}', [UserController::class, 'show'])->name('show');
+                Route::get('/{id}/edit', [UserController::class, 'edit'])->name('edit');
+                Route::put('/{id}', [UserController::class, 'update'])->name('update');
+                Route::delete('/{id}', [UserController::class, 'destroy'])->name('destroy');
+            });
 
-// Shared routes for both students and instructors
-Route::middleware(['auth', 'role:student,instructor'])->group(function () {
-    Route::get('sessions', [SessionController::class, 'index'])->name('sessions.index'); // View all sessions
-    Route::get('sessions/{session}', [SessionController::class, 'show'])->name('sessions.show'); // View a single session
-    Route::get('sessions/{session}/tasks', [TaskController::class, 'index'])->name('sessions.tasks.index');
-    Route::get('sessions/{session}/tasks/{task}', [TaskController::class, 'show'])->name('sessions.tasks.show');
+            // Track Management Routes
+            Route::prefix('admin/tracks')->name('admin.tracks.')->group(function () {
+                Route::get('/', [TrackController::class, 'index'])->name('index');
+                Route::get('/create', [TrackController::class, 'create'])->name('create');
+                Route::post('/', [TrackController::class, 'store'])->name('store');
+                Route::get('/{id}/edit', [TrackController::class, 'edit'])->name('edit');
+                Route::put('/{id}', [TrackController::class, 'update'])->name('update');
+                Route::delete('/{id}', [TrackController::class, 'destroy'])->name('destroy');
 
-    Route::get('attendance/{sessionId}', [AttendanceController::class, 'showAttendanceForm'])->name('attendance.index');
+                // Route to assign users to tracks using buttons
+                Route::get('/{id}/assign', [TrackController::class, 'assignUsersForm'])->name('assign');
+                Route::post('/{id}/assign', [TrackController::class, 'assignUsers'])->name('assign.users');
+            });
+        });
 
-    Route::get('sessions/{sessionId}/notes', [SessionNoteController::class, 'index'])->name('notes.index'); // List notes for a session
+        // Shared routes for both students and instructors
+        Route::middleware(['auth', 'role:student,instructor'])->group(function () {
+            Route::get('sessions', [SessionController::class, 'index'])->name('sessions.index'); // View all sessions
+            Route::get('sessions/{session}', [SessionController::class, 'show'])->name('sessions.show'); // View a single session
+            Route::get('sessions/{session}/tasks', [TaskController::class, 'index'])->name('sessions.tasks.index');
+            Route::get('sessions/{session}/tasks/{task}', [TaskController::class, 'show'])->name('sessions.tasks.show');
+
+            Route::get('attendance/{sessionId}', [AttendanceController::class, 'showAttendanceForm'])->name('attendance.index');
+
+            Route::get('sessions/{sessionId}/notes', [SessionNoteController::class, 'index'])->name('notes.index'); // List notes for a session
+
+            // Student routes
+            Route::middleware(['auth', 'role:student'])->group(function () {
+                Route::get('/student/dashboard', [StudentDashboardController::class, 'index'])->name('student.dashboard');
+                Route::post('sessions/{session}/tasks/{task}/submit', [TaskController::class, 'submit'])->name('sessions.tasks.submit');
+            });
+        });
 
 
-});
-// Student routes
-Route::middleware(['auth', 'role:student'])->group(function () {
-    Route::get('/student/dashboard', [StudentDashboardController::class, 'index'])->name('student.dashboard');
-    Route::post('sessions/{session}/tasks/{task}/submit', [TaskController::class, 'submit'])->name('sessions.tasks.submit');
-});
-// HR routes
-Route::middleware(['auth', 'role:hr'])->group(function () {
-    Route::get('/hr/dashboard', [HrDashboardController::class, 'index'])->name('hr.dashboard');
-});
+
+
+        // Instructor routes 
+        Route::middleware(['auth', 'role:instructor'])->group(function () {
+            Route::get('/instructor/dashboard', [InstructorDashboardController::class, 'index'])->name('instructor.dashboard');
+
+            // Session Routes
+            Route::resource('sessions', SessionController::class); // Includes all CRUD operations
+
+            // Task Routes
+            Route::get('sessions/{session}/tasks', [TaskController::class, 'index'])->name('sessions.tasks.index');
+            Route::get('sessions/{session}/tasks/create', [TaskController::class, 'create'])->name('sessions.tasks.create');
+            Route::post('sessions/{session}/tasks', [TaskController::class, 'store'])->name('sessions.tasks.store');
+            Route::get('sessions/{session}/tasks/{task}', [TaskController::class, 'show'])->name('sessions.tasks.show');
+            Route::get('sessions/{session}/tasks/{task}/edit', [TaskController::class, 'edit'])->name('sessions.tasks.edit');
+            Route::put('sessions/{session}/tasks/{task}', [TaskController::class, 'update'])->name('sessions.tasks.update');
+            Route::delete('sessions/{session}/tasks/{task}', [TaskController::class, 'destroy'])->name('sessions.tasks.destroy');
+            Route::get('sessions/{sessionId}/tasks/{taskId}/submissions/{submissionId}/grade', [TaskController::class, 'showGradeForm'])
+                ->name('sessions.tasks.grade.form');
+
+            // Route to handle the grading submission
+            Route::post('sessions/{sessionId}/tasks/{taskId}/submissions/{submissionId}/grade', [TaskController::class, 'grade'])
+                ->name('sessions.tasks.grade');
+
+            // Attendance Routes
+            Route::post('attendance/{sessionId}', [AttendanceController::class, 'storeAttendance'])->name('attendance.store');
+
+            // Session Note Routes
+            Route::post('sessions/{sessionId}/notes', [SessionNoteController::class, 'store'])->name('notes.store');
+            Route::put('sessions/{sessionId}/notes/{id}', [SessionNoteController::class, 'update'])->name('notes.update');
+            Route::delete('sessions/{sessionId}/notes/{id}', [SessionNoteController::class, 'destroy'])->name('notes.destroy');
+            Route::post('/sessions/{sessionId}/notes/publish', [SessionNoteController::class, 'publish'])->name('notes.publish');
+        });
+    }
+);
+
+
 
 
 require __DIR__ . '/auth.php';
