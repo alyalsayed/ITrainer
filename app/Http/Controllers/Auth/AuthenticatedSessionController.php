@@ -39,16 +39,11 @@ class AuthenticatedSessionController extends Controller
         // Role-based redirection
         if ($user->userType === 'admin') {
             return redirect()->intended(route('admin.dashboard'));
-        } elseif ($user->userType === 'hr') {
-            return redirect()->intended(route('hr.dashboard'));
-        } elseif ($user->userType === 'instructor') {
+        }  elseif ($user->userType === 'instructor') {
             return redirect()->intended(route('instructor.dashboard'));
         } elseif ($user->userType === 'student') {
             return redirect()->intended(route('student.dashboard'));
         }
-
-        // Default redirection if role doesn't match
-        // return redirect()->intended(route('dashboard'));
 
         return redirect()->intended('/');
     }
