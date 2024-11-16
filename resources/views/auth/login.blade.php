@@ -57,6 +57,20 @@
                             <p>Don't have an account? <a href="{{ route('register') }}"> Sign Up Here</a></p>
                         </div>
                     </form>
+
+                    <!-- OR Divider -->
+                    <div class="text-center m-t-20">
+                        <hr>
+                        <span>OR</span>
+                        <hr>
+                    </div>
+
+                    <!-- Google Login Button -->
+                    <div class="text-center">
+                        <a href="{{ route('google.redirect') }}" class="btn btn-danger btn-flat m-b-30">
+                            <i class="fa fa-google"></i> Login with Google
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -65,4 +79,3 @@
 </body>
 
 </html>
-
