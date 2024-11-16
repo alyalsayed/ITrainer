@@ -1,5 +1,5 @@
 <!doctype html>
- <html class="no-js" lang=""> 
+<html class="no-js" lang=""> 
 <head>
     @include('layouts.head')
     @section('title', 'Register') 
@@ -74,10 +74,20 @@
                             <p>Already have an account? <a href="{{ route('login') }}">Sign in</a></p>
                         </div>
                     </form>
+
+                    <!-- Google Login Button -->
+                    <div class="social-login text-center mt-3">
+                        <a href="{{ route('google.redirect') }}" class="btn btn-danger btn-flat">
+                            <i class="fa fa-google"></i> Login with Google
+                        </a>
+                    </div>
+
                 </div>
             </div>
         </div>
     </div>
+
 @include('layouts.scripts')
+
 </body>
 </html>
